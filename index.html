@@ -1471,7 +1471,7 @@
       result.innerHTML = `<div class="card"><div class="card-label">El Sommelier dice</div><div class="card-body">${data.respuesta_libre}</div></div>`;
       return;
     }
-    const vinos = data.maridajes || data.vinos || [];
+    
     const vinos = data.maridajes || data.vinos || data.recomendaciones || [];
       result.innerHTML = `<div class="card"><div class="card-body" style="color:var(--text-dim)">No se encontraron maridajes para ${plato}.</div></div>`;
       return;

@@ -1472,7 +1472,7 @@
       return;
     }
     const vinos = data.maridajes || data.vinos || [];
-    if (!vinos.length) {
+    const vinos = data.maridajes || data.vinos || data.recomendaciones || [];
       result.innerHTML = `<div class="card"><div class="card-body" style="color:var(--text-dim)">No se encontraron maridajes para ${plato}.</div></div>`;
       return;
     }

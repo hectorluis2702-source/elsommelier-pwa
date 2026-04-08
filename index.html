@@ -2,1682 +2,899 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#121212" />
-  <meta name="description" content="El Sommelier RD — La inteligencia vinícola del Caribe" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="El Sommelier RD" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <title>El Sommelier RD</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academia El Sommelier RD — Educación Vinícola de Excelencia</title>
+  <meta name="description" content="Academia de formación en cultura del vino y enología para el mercado dominicano. Dirigida por Héctor García, camino al Master Sommelier." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
-
   <style>
     :root {
-      --bg: #121212;
-      --bg-card: #1a1a1a;
-      --bg-elevated: #222222;
+      --bg: #0e0c0c;
+      --bg2: #141010;
       --burgundy: #800020;
-      --burgundy-light: #a0002a;
+      --burgundy-light: #9b0026;
       --gold: #B8860B;
-      --gold-light: #D4A017;
+      --gold-light: #d4a017;
       --cream: #F5EFE0;
       --cream-dim: #c8bfa8;
-      --text: #F5EFE0;
-      --text-dim: #9a9080;
+      --white: #ffffff;
       --border: rgba(184,134,11,0.18);
-      --border-hover: rgba(184,134,11,0.45);
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow: 0 8px 40px rgba(0,0,0,0.6);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { height: 100%; scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; }
 
     body {
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
+      background-color: var(--bg);
+      color: var(--cream);
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
+      line-height: 1.7;
       overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
     }
 
-    /* ── GRAIN OVERLAY ── */
+    /* ── NOISE OVERLAY ── */
     body::before {
       content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 9999; opacity: 0.35;
-    }
-
-    /* ── SPLASH / LOADER ── */
-    #splash {
-      position: fixed; inset: 0;
-      background: var(--bg);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 10000;
-      transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
-    #splash.hidden { opacity: 0; visibility: hidden; }
-
-    .splash-monogram {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 5rem;
-      font-weight: 300;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-      animation: fadeIn 1.2s ease forwards;
-      line-height: 1;
-    }
-    .splash-subtitle {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.35em;
-      color: var(--text-dim);
-      margin-top: 1rem;
-      text-transform: uppercase;
-      animation: fadeIn 1.5s ease forwards;
-    }
-    .splash-bar {
-      width: 120px; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin-top: 2.5rem;
-      animation: expand 2s ease 0.5s both;
-    }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-    @keyframes expand { from { width: 0; opacity: 0; } to { width: 120px; opacity: 1; } }
-
-    /* ── APP SHELL ── */
-    #app { display: flex; flex-direction: column; min-height: 100vh; opacity: 0; transition: opacity 0.6s ease; }
-    #app.visible { opacity: 1; }
-
-    /* ── HEADER ── */
-    header {
-      position: sticky; top: 0; z-index: 100;
-      padding: 1.1rem 1.5rem;
-      display: flex; align-items: center; justify-content: space-between;
-      background: rgba(18,18,18,0.92);
-      backdrop-filter: blur(20px) saturate(1.5);
-      -webkit-backdrop-filter: blur(20px) saturate(1.5);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .logo {
-      display: flex; align-items: center; gap: 0.7rem;
-    }
-    .logo-emblem {
-      width: 36px; height: 36px;
-      border: 1px solid var(--gold);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      color: var(--gold);
-      font-style: italic;
-    }
-    .logo-text {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem;
-      font-weight: 400;
-      color: var(--cream);
-      letter-spacing: 0.04em;
-    }
-    .logo-text span { color: var(--gold); }
-
-    .header-status {
-      display: flex; align-items: center; gap: 0.4rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      color: var(--text-dim);
-      letter-spacing: 0.1em;
-    }
-    .status-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #2d8a4e;
-      animation: pulse-dot 2s infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
     }
 
     /* ── NAV ── */
     nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
       display: flex;
-      overflow-x: auto;
-      scrollbar-width: none;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 4rem;
+      background: rgba(14,12,12,0.88);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 0 0.5rem;
-      gap: 0;
     }
-    nav::-webkit-scrollbar { display: none; }
 
-    .nav-btn {
-      flex-shrink: 0;
-      padding: 0.9rem 1.1rem;
-      background: none; border: none;
-      color: var(--text-dim);
-      font-family: 'DM Mono', monospace;
+    .nav-brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-brand .name {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--gold-light);
+      letter-spacing: 0.03em;
+      line-height: 1.1;
+    }
+
+    .nav-brand .sub {
       font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--cream-dim);
+      font-size: 0.78rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.25s ease;
-      white-space: nowrap;
-      display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
-    }
-    .nav-btn .nav-icon { font-size: 1.1rem; }
-    .nav-btn:hover { color: var(--cream); }
-    .nav-btn.active {
-      color: var(--gold);
-      border-bottom-color: var(--gold);
+      transition: color 0.3s;
     }
 
-    /* ── MAIN CONTENT ── */
-    main { flex: 1; padding: 1.5rem 1.2rem 6rem; max-width: 600px; margin: 0 auto; width: 100%; }
-
-    /* ── SECTIONS ── */
-    .section { display: none; animation: sectionIn 0.35s ease; }
-    .section.active { display: block; }
-    @keyframes sectionIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    .nav-links a:hover { color: var(--gold-light); }
 
     /* ── HERO ── */
     .hero {
-      text-align: center;
-      padding: 2rem 0 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
       position: relative;
+      overflow: hidden;
     }
-    .hero::before {
-      content: '';
+
+    .hero-bg {
       position: absolute;
-      top: -2rem; left: 50%; transform: translateX(-50%);
-      width: 300px; height: 300px;
-      background: radial-gradient(ellipse, rgba(128,0,32,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero-greeting {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.2rem, 8vw, 3rem);
-      font-weight: 300;
-      line-height: 1.15;
-      color: var(--cream);
-      margin-bottom: 0.75rem;
-    }
-    .hero-title em { color: var(--gold); font-style: italic; }
-    .hero-sub {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      line-height: 1.7;
-      max-width: 320px;
-      margin: 0 auto 2rem;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 75% 50%, rgba(128,0,32,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 20% 80%, rgba(184,134,11,0.06) 0%, transparent 60%);
     }
 
-    /* ── CARDS ── */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.3rem;
-      margin-bottom: 1rem;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover { border-color: var(--border-hover); box-shadow: var(--shadow); }
-
-    .card-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.25em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-    .card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.25rem;
-      font-weight: 400;
-      color: var(--cream);
-      margin-bottom: 0.4rem;
-    }
-    .card-body { font-size: 0.8rem; color: var(--text-dim); line-height: 1.6; }
-
-    /* ── QUICK ACCESS GRID ── */
-    .quick-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
-      margin: 1.5rem 0;
-    }
-    .quick-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.2rem 0.8rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      text-align: center;
-    }
-    .quick-card:hover {
-      border-color: var(--gold);
-      background: var(--bg-elevated);
-      transform: translateY(-2px);
-    }
-    .quick-card .icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
-    .quick-card .label {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.9rem;
-      color: var(--cream);
-    }
-    .quick-card .desc { font-size: 0.6rem; color: var(--text-dim); margin-top: 0.2rem; }
-
-    /* ── DIVIDER ── */
-    .divider {
-      display: flex; align-items: center; gap: 1rem;
-      margin: 1.5rem 0;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px;
-      background: var(--border);
-    }
-    .divider span {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.2em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      white-space: nowrap;
+    .hero-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--border), transparent);
+      opacity: 0.4;
     }
 
-    /* ── CHAT (SOMMELIER) ── */
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      height: calc(100vh - 220px);
-      min-height: 400px;
-    }
-    .chat-header {
-      display: flex; align-items: center; gap: 0.8rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 1rem;
-    }
-    .maestro-avatar {
-      width: 44px; height: 44px;
-      border: 1px solid var(--gold);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.3rem;
-      color: var(--gold);
-      font-style: italic;
-      flex-shrink: 0;
-    }
-    .maestro-info h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      color: var(--cream);
-    }
-    .maestro-info p { font-size: 0.65rem; color: var(--text-dim); }
-
-    #chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      padding-right: 0.3rem;
-    }
-    #chat-messages::-webkit-scrollbar { width: 4px; }
-    #chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-    .msg {
-      max-width: 85%;
-      animation: msgIn 0.3s ease;
-    }
-    @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-
-    .msg.user { align-self: flex-end; }
-    .msg.maestro { align-self: flex-start; }
-
-    .msg-bubble {
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius);
-      font-size: 0.82rem;
-      line-height: 1.65;
-    }
-    .msg.user .msg-bubble {
-      background: var(--burgundy);
-      color: var(--cream);
-      border-bottom-right-radius: 4px;
-    }
-    .msg.maestro .msg-bubble {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      color: var(--cream);
-      border-bottom-left-radius: 4px;
-    }
-    .msg-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      margin-bottom: 0.3rem;
-    }
-    .msg.user .msg-label { text-align: right; }
-
-    .typing-indicator {
-      display: flex; gap: 4px; padding: 0.75rem 1rem;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      border-bottom-left-radius: 4px;
-      width: fit-content;
-    }
-    .typing-indicator span {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--gold);
-      animation: typing 1.2s infinite;
-    }
-    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typing { 0%, 60%, 100% { opacity: 0.2; transform: scale(0.9); } 30% { opacity: 1; transform: scale(1.1); } }
-
-    .chat-input-area {
-      display: flex; gap: 0.6rem;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
-    .chat-input {
-      flex: 1;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.7rem 1rem;
-      color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem;
-      resize: none;
-      outline: none;
-      transition: border-color 0.25s;
-      min-height: 44px;
-      max-height: 120px;
-    }
-    .chat-input::placeholder { color: var(--text-dim); }
-    .chat-input:focus { border-color: var(--gold); }
-
-    .send-btn {
-      width: 44px; height: 44px;
-      border-radius: var(--radius-sm);
-      background: var(--burgundy);
-      border: none; cursor: pointer;
-      color: var(--cream);
-      font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s ease;
-      flex-shrink: 0;
-    }
-    .send-btn:hover { background: var(--burgundy-light); }
-    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* ── MARIDAJE ── */
-    .maridaje-input-group { margin-bottom: 1rem; }
-    .maridaje-input-group label {
-      display: block;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-    .maridaje-input-group input, .maridaje-input-group select {
-      width: 100%;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.7rem 1rem;
-      color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem;
-      outline: none;
-      transition: border-color 0.25s;
-      -webkit-appearance: none;
-    }
-    .maridaje-input-group input::placeholder { color: var(--text-dim); }
-    .maridaje-input-group input:focus,
-    .maridaje-input-group select:focus { border-color: var(--gold); }
-    .maridaje-input-group select option { background: var(--bg-elevated); }
-
-    .platos-grid {
-      display: flex; flex-wrap: wrap; gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    .plato-chip {
-      padding: 0.4rem 0.8rem;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background: none;
-    }
-    .plato-chip:hover, .plato-chip.selected {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(184,134,11,0.08);
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
     }
 
-    /* ── BTN PRIMARY ── */
-    .btn-primary {
-      width: 100%;
-      padding: 0.85rem;
-      background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
-      border: 1px solid rgba(128,0,32,0.6);
-      border-radius: var(--radius);
-      color: var(--cream);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-    .btn-primary:hover:not(:disabled) {
-      background: linear-gradient(135deg, var(--burgundy-light), #c0003a);
-      box-shadow: 0 4px 20px rgba(128,0,32,0.4);
-      transform: translateY(-1px);
-    }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* ── MARIDAJE RESULT ── */
-    .maridaje-result { margin-top: 1.5rem; }
-    .maridaje-vino-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.2rem;
-      margin-bottom: 0.75rem;
-      border-left: 3px solid var(--gold);
-    }
-    .maridaje-vino-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      color: var(--cream);
-      margin-bottom: 0.3rem;
-    }
-    .maridaje-vino-region {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem;
-      color: var(--gold);
-      letter-spacing: 0.15em;
-      margin-bottom: 0.6rem;
-    }
-    .maridaje-vino-razon { font-size: 0.78rem; color: var(--cream-dim); line-height: 1.6; margin-bottom: 0.5rem; }
-    .maridaje-vino-poetica {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 0.9rem;
-      color: var(--gold);
-      border-top: 1px solid var(--border);
-      padding-top: 0.6rem;
-      margin-top: 0.6rem;
-    }
-    .consejo-maestro {
-      background: linear-gradient(135deg, rgba(128,0,32,0.12), rgba(184,134,11,0.06));
-      border: 1px solid rgba(184,134,11,0.25);
-      border-radius: var(--radius);
-      padding: 1.2rem;
-      margin-top: 1rem;
-    }
-    .consejo-maestro .label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.25em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-    .consejo-maestro p { font-size: 0.82rem; color: var(--cream); line-height: 1.65; font-style: italic; }
-
-    /* ── VINOS ── */
-    .search-bar {
-      display: flex; gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    .search-input {
-      flex: 1;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.65rem 1rem;
-      color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem;
-      outline: none;
-      transition: border-color 0.25s;
-    }
-    .search-input:focus { border-color: var(--gold); }
-    .search-input::placeholder { color: var(--text-dim); }
-    .search-btn {
-      padding: 0 1rem;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--gold);
-      cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.2s;
-    }
-    .search-btn:hover { border-color: var(--gold); }
-
-    /* ── FILTER PILLS (Vinos) ── */
-    .filter-pills {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .filter-pill {
-      padding: 0.4rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background: none;
-    }
-    .filter-pill:hover, .filter-pill.active {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(184,134,11,0.08);
-    }
-    .filter-pill .dot {
-      display: inline-block;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      margin-right: 0.4rem;
-      vertical-align: middle;
-    }
-
-    .vino-item {
+    .hero-eyebrow {
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 1rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      margin-bottom: 0.75rem;
-      transition: all 0.25s;
-      cursor: pointer;
+      margin-bottom: 2rem;
     }
-    .vino-item:hover { border-color: var(--border-hover); transform: translateX(3px); }
-    .vino-color-dot {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      border: 1px solid var(--border);
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 48px;
+      height: 1px;
+      background: var(--gold);
     }
-    .vino-info { flex: 1; }
-    .vino-nombre {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      color: var(--cream);
-    }
-    .vino-meta {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem;
-      color: var(--text-dim);
-      letter-spacing: 0.1em;
-      margin-top: 0.2rem;
-    }
-    .vino-precio {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
+
+    .hero-eyebrow span {
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
       color: var(--gold);
-      flex-shrink: 0;
     }
 
-    /* ── CATA LAB ── */
-    .cata-upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 3rem 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      background: var(--bg-card);
-      margin-bottom: 1rem;
-    }
-    .cata-upload-zone:hover {
-      border-color: var(--gold);
-      background: var(--bg-elevated);
-    }
-    .cata-upload-zone .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-    .cata-upload-zone .title {
+    .hero h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
+      font-size: clamp(3.5rem, 8vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      margin-bottom: 0.2rem;
+      color: var(--white);
+    }
+
+    .hero h1 em {
+      color: var(--gold-light);
+      font-style: italic;
+      display: block;
+    }
+
+    .hero-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--cream-dim);
+      margin: 1.2rem 0 2.2rem;
+    }
+
+    .hero-desc {
+      font-size: 0.95rem;
+      color: var(--cream-dim);
+      max-width: 480px;
+      margin-bottom: 3rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 0.9rem 2.2rem;
+      background: var(--gold);
+      color: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    .btn-outline {
+      padding: 0.9rem 2.2rem;
+      background: transparent;
       color: var(--cream);
-      margin-bottom: 0.3rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid rgba(245,239,224,0.25);
+      cursor: pointer;
+      transition: border-color 0.3s, color 0.3s;
     }
-    .cata-upload-zone .subtitle { font-size: 0.72rem; color: var(--text-dim); }
-    .cata-upload-zone input[type="file"] { display: none; }
 
-    .cata-preview {
-      display: none;
-      text-align: center;
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── STATS ── */
+    .stats {
+      position: absolute;
+      bottom: 3rem; left: 4rem; right: 4rem;
+      display: flex;
+      gap: 4rem;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+
+    .stat-item .number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+
+    .stat-item .label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-top: 4px;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 7rem 4rem;
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
       margin-bottom: 1rem;
-    }
-    .cata-preview img {
-      max-width: 100%;
-      max-height: 300px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
 
-    #cata-result { margin-top: 1rem; }
-
-    /* ── BODEGA ── */
-    .bodega-empty {
-      text-align: center;
-      padding: 3rem 1rem;
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 40px;
+      height: 1px;
+      background: var(--gold);
     }
-    .bodega-empty .icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
-    .bodega-empty .title {
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title em { color: var(--gold-light); font-style: italic; }
+
+    /* ── ABOUT / MISIÓN ── */
+    .about {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .about-text p {
+      color: var(--cream-dim);
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .about-values {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .value-item {
+      border-left: 2px solid var(--burgundy);
+      padding-left: 1.5rem;
+    }
+
+    .value-item h4 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.2rem;
       color: var(--cream);
-      margin-bottom: 0.5rem;
-    }
-    .bodega-empty .subtitle { font-size: 0.75rem; color: var(--text-dim); line-height: 1.6; }
-
-    .bodega-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-    .bodega-stat {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.8rem 0.5rem;
-      text-align: center;
-    }
-    .bodega-stat .value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      color: var(--gold);
-    }
-    .bodega-stat .label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.5rem;
-      color: var(--text-dim);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-top: 0.2rem;
-    }
-
-    #bodega-list { margin-top: 1rem; }
-
-    /* ── PERFIL ── */
-    .perfil-hero {
-      text-align: center;
-      padding: 2rem 0 1.5rem;
-    }
-    .perfil-avatar {
-      width: 72px; height: 72px;
-      border: 2px solid var(--gold);
-      border-radius: 50%;
-      margin: 0 auto 1rem;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      color: var(--gold);
-      font-style: italic;
-      background: var(--bg-elevated);
-    }
-    .perfil-nombre {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      color: var(--cream);
       margin-bottom: 0.3rem;
     }
-    .perfil-nivel {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      text-transform: uppercase;
+
+    .value-item p {
+      font-size: 0.85rem;
+      color: var(--cream-dim);
     }
 
-    .stats-grid {
+    /* ── PROGRAMAS ── */
+    .programs-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
-      margin: 1.5rem 0;
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 3rem auto 0;
     }
-    .stat-box {
-      background: var(--bg-elevated);
+
+    .program-card {
+      background: rgba(255,255,255,0.02);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 1rem 0.5rem;
-      text-align: center;
+      padding: 2.5rem 2rem;
+      position: relative;
+      transition: border-color 0.3s, transform 0.3s;
     }
-    .stat-value {
+
+    .program-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .program-level {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .program-card h3 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.8rem;
-      color: var(--gold);
-      line-height: 1;
-    }
-    .stat-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.52rem;
-      color: var(--text-dim);
-      letter-spacing: 0.1em;
-      margin-top: 0.3rem;
-      text-transform: uppercase;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 1rem;
+      line-height: 1.1;
     }
 
-    .xp-bar-container { margin: 1rem 0; }
-    .xp-bar-label {
-      display: flex; justify-content: space-between;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      color: var(--text-dim);
-      margin-bottom: 0.5rem;
+    .program-card p {
+      font-size: 0.87rem;
+      color: var(--cream-dim);
+      margin-bottom: 1.5rem;
     }
-    .xp-bar {
-      height: 4px;
-      background: var(--bg-elevated);
-      border-radius: 2px;
+
+    .program-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .program-card ul li {
+      font-size: 0.82rem;
+      color: var(--cream-dim);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .program-card ul li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--burgundy);
+    }
+
+    .program-card.featured {
+      border-color: var(--burgundy);
+      background: rgba(128,0,32,0.05);
+    }
+
+    .program-card.featured:hover { border-color: var(--gold); }
+
+    .featured-badge {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: var(--burgundy);
+      color: var(--cream);
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+    }
+
+    /* ── DIRECTOR ── */
+    .director {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+    }
+
+    .director-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 5rem;
+      align-items: center;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .director-portrait {
+      aspect-ratio: 3/4;
+      background: rgba(128,0,32,0.08);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
       overflow: hidden;
     }
-    .xp-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--burgundy), var(--gold));
-      border-radius: 2px;
-      width: 0;
-      transition: width 1.2s ease;
+
+    .director-portrait::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(184,134,11,0.08) 0%, transparent 60%);
     }
 
-    /* ── ACADEMIA ── */
-    .nivel-badge {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
+    .portrait-initials {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      font-weight: 300;
+      color: var(--gold);
+      opacity: 0.4;
+    }
+
+    .director-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.0;
+      margin-bottom: 0.3rem;
+    }
+
+    .director-info .title {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.8rem;
+    }
+
+    .director-info p {
+      font-size: 0.92rem;
+      color: var(--cream-dim);
       margin-bottom: 1rem;
     }
-    .nivel-badge.bronce { background: rgba(184,134,11,0.12); border: 1px solid rgba(184,134,11,0.3); color: #cd7f32; }
-    .nivel-badge.plata { background: rgba(192,192,192,0.1); border: 1px solid rgba(192,192,192,0.3); color: #c0c0c0; }
-    .nivel-badge.oro { background: rgba(184,134,11,0.15); border: 1px solid rgba(184,134,11,0.4); color: var(--gold); }
 
-    .leccion-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.1rem;
-      margin-bottom: 0.75rem;
-      display: flex; align-items: center; gap: 1rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
+    .credentials {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 1.8rem;
     }
-    .leccion-card:hover { border-color: var(--border-hover); }
-    .leccion-num {
-      width: 36px; height: 36px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      flex-shrink: 0;
+
+    .credential {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.82rem;
+      color: var(--cream-dim);
     }
-    .leccion-card.completada .leccion-num {
-      background: rgba(45,138,78,0.15);
-      border-color: rgba(45,138,78,0.3);
-      color: #2d8a4e;
+
+    .credential::before {
+      content: '◆';
+      color: var(--burgundy);
+      font-size: 0.55rem;
     }
-    .leccion-titulo {
+
+    /* ── CONTACTO ── */
+    .contact {
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .contact-info h3 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem;
-      color: var(--cream);
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 1.5rem;
     }
-    .leccion-dur {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.58rem;
-      color: var(--text-dim);
-      margin-top: 0.2rem;
-    }
-    .leccion-arrow { margin-left: auto; color: var(--text-dim); font-size: 0.8rem; }
 
-    /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.7rem 1.3rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      color: var(--cream);
-      opacity: 0;
-      transition: all 0.35s ease;
-      z-index: 500;
-      white-space: nowrap;
-      box-shadow: var(--shadow);
+    .contact-item {
+      margin-bottom: 1.2rem;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* ── LOADING ── */
-    .loading-spinner {
-      display: flex; align-items: center; justify-content: center;
-      padding: 2rem;
-      color: var(--text-dim);
+    .contact-item .label {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-item .value {
+      font-size: 0.92rem;
+      color: var(--cream);
       font-family: 'DM Mono', monospace;
+      font-weight: 300;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
       font-size: 0.65rem;
       letter-spacing: 0.15em;
-      gap: 0.75rem;
+      text-transform: uppercase;
+      color: var(--cream-dim);
     }
-    .spinner {
-      width: 16px; height: 16px;
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,0.03);
       border: 1px solid var(--border);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.8rem 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--gold);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-group select option { background: var(--bg); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg2);
+    }
+
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--gold);
+    }
+
+    .footer-info {
+      font-size: 0.72rem;
+      color: var(--cream-dim);
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .footer-domain {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--cream-dim);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── DIVIDER ── */
+    .ornament {
+      text-align: center;
+      color: var(--gold);
+      font-size: 1rem;
+      opacity: 0.4;
+      letter-spacing: 0.5em;
+      margin: 1rem 0;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-content > * {
+      animation: fadeUp 0.8s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-eyebrow { animation-delay: 0.1s; }
+    .hero h1 { animation-delay: 0.25s; }
+    .hero-tagline { animation-delay: 0.4s; }
+    .hero-desc { animation-delay: 0.5s; }
+    .hero-ctas { animation-delay: 0.65s; }
 
     /* ── RESPONSIVE ── */
-    @media (min-width: 600px) {
-      main { padding: 2rem 1.5rem 7rem; }
-      .quick-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (min-width: 768px) {
-      main { max-width: 720px; }
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      section { padding: 5rem 2rem; }
+      .hero { padding: 6rem 2rem 3rem; }
+      .about-grid, .director-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .programs-grid { grid-template-columns: 1fr; }
+      .stats { position: relative; bottom: auto; left: auto; padding: 2rem 0 0; flex-wrap: wrap; gap: 2rem; }
+      .hero { min-height: auto; padding-bottom: 5rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- SPLASH -->
-<div id="splash">
-  <div class="splash-monogram">S</div>
-  <div class="splash-subtitle">El Sommelier RD</div>
-  <div class="splash-bar"></div>
-</div>
-
-<!-- APP -->
-<div id="app">
-  <header>
-    <div class="logo">
-      <div class="logo-emblem">S</div>
-      <div class="logo-text">El Sommelier <span>RD</span></div>
-    </div>
-    <div class="header-status">
-      <div class="status-dot"></div>
-      <span>EN LINEA</span>
-    </div>
-  </header>
-
+  <!-- NAV -->
   <nav>
-    <button class="nav-btn active" data-section="inicio">
-      <span class="nav-icon">🏠</span>Inicio
-    </button>
-    <button class="nav-btn" data-section="sommelier">
-      <span class="nav-icon">🎓</span>Sommelier
-    </button>
-    <button class="nav-btn" data-section="catalab">
-      <span class="nav-icon">📸</span>Escanea
-    </button>
-    <button class="nav-btn" data-section="maridaje">
-      <span class="nav-icon">🍽️</span>Maridaje
-    </button>
-    <button class="nav-btn" data-section="vinos">
-      <span class="nav-icon">🍷</span>Vinos
-    </button>
-    <button class="nav-btn" data-section="bodega">
-      <span class="nav-icon">📚</span>Bodega
-    </button>
-    <button class="nav-btn" data-section="academia">
-      <span class="nav-icon">🎓</span>Academia
-    </button>
-    <button class="nav-btn" data-section="perfil">
-      <span class="nav-icon">👤</span>Perfil
-    </button>
+    <div class="nav-brand">
+      <span class="name">Academia El Sommelier RD</span>
+      <span class="sub">República Dominicana</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#mision">Misión</a></li>
+      <li><a href="#programas">Programas</a></li>
+      <li><a href="#director">Director</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
   </nav>
 
-  <main>
-
-    <!-- ─── INICIO ─── -->
-    <div class="section active" id="sec-inicio">
-      <div class="hero">
-        <div class="hero-greeting">Bienvenidos</div>
-        <h1 class="hero-title">El Sommelier RD<br/><em>Academy</em></h1>
-        <p class="hero-sub">El primer sommelier digital dominicano. Aprende, descubre y marida con la sabiduria de El Maestro.</p>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-line"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span>Sommelier Profesional · República Dominicana</span>
       </div>
-
-      <div class="quick-grid">
-        <div class="quick-card" onclick="goSection('sommelier')">
-          <div class="icon">🎓</div>
-          <div class="label">Sommelier de Cabecera</div>
-          <div class="desc">Consulta con AI</div>
-        </div>
-        <div class="quick-card" onclick="goSection('catalab')">
-          <div class="icon">📸</div>
-          <div class="label">Escanea tu Vino</div>
-          <div class="desc">Escanea etiquetas</div>
-        </div>
-        <div class="quick-card" onclick="goSection('maridaje')">
-          <div class="icon">🍽️</div>
-          <div class="label">Maridaje</div>
-          <div class="desc">Cocina dominicana</div>
-        </div>
-        <div class="quick-card" onclick="goSection('vinos')">
-          <div class="icon">🍷</div>
-          <div class="label">Vinos</div>
-          <div class="desc">Explora miles</div>
-        </div>
-        <div class="quick-card" onclick="goSection('bodega')">
-          <div class="icon">🍾</div>
-          <div class="label">Bodega</div>
-          <div class="desc">Tu coleccion</div>
-        </div>
-        <div class="quick-card" onclick="goSection('academia')">
-          <div class="icon">📚</div>
-          <div class="label">Academia</div>
-          <div class="desc">15 lecciones</div>
-        </div>
-      </div>
-
-      <div class="divider"><span>Destacado</span></div>
-
-      <div class="card">
-        <div class="card-label">Leccion del dia</div>
-        <div class="card-title">Los aromas terciarios del vino</div>
-        <div class="card-body">Descubre como el tiempo en barrica y botella transforma un vino y crea complejidad unica. Nivel Bronce - 8 min</div>
-      </div>
-
-      <div class="card">
-        <div class="card-label">Maridaje de la semana</div>
-        <div class="card-title">Mofongo al ajillo con Albarino</div>
-        <div class="card-body">La acidez vibrante del Albarino gallego abraza el ajo y la textura del platano como un mar que besa la costa caribena.</div>
+      <h1>
+        Héctor
+        <em>García</em>
+      </h1>
+      <p class="hero-tagline">Hacia el Master Sommelier</p>
+      <p class="hero-desc">
+        Institución educativa dedicada a la formación de excelencia en cultura del vino y enología para el mercado dominicano y el Caribe.
+      </p>
+      <div class="hero-ctas">
+        <a href="#programas" class="btn-primary">Explorar Programas</a>
+        <a href="#contacto" class="btn-outline">Contactar</a>
       </div>
     </div>
+    <div class="stats">
+      <div class="stat-item">
+        <div class="number">+500</div>
+        <div class="label">Alumnos formados</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">12</div>
+        <div class="label">Años de experiencia</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">50+</div>
+        <div class="label">Episodios del podcast</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">3</div>
+        <div class="label">Niveles académicos</div>
+      </div>
+    </div>
+  </section>
 
-    <!-- ─── SOMMELIER / CHAT ─── -->
-    <div class="section" id="sec-sommelier">
-      <div class="chat-container">
-        <div class="chat-header">
-          <div class="maestro-avatar">M</div>
-          <div class="maestro-info">
-            <h3>El Sommelier de Cabecera</h3>
-            <p>Cerebro-Elsommelier-RD - Siempre disponible</p>
+  <!-- MISIÓN -->
+  <section class="about" id="mision">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-label">Nuestra Institución</div>
+        <h2 class="section-title">Misión y <em>Visión</em></h2>
+        <p>
+          La Academia El Sommelier RD es una institución educativa dominicana dedicada a la formación de profesionales y entusiastas del vino con rigor académico, sensibilidad cultural y profundo arraigo en la identidad gastronómica del Caribe.
+        </p>
+        <p>
+          Fundada por Héctor García, Doctor en Enología y candidato a Master Sommelier, la Academia ofrece programas de educación vinícola adaptados a la realidad y el paladar dominicano.
+        </p>
+        <p>
+          Nuestra misión es elevar la cultura del vino en la República Dominicana, formando profesionales capaces de integrar el conocimiento técnico con la riqueza gastronómica caribeña.
+        </p>
+        <div class="ornament">— ◆ —</div>
+      </div>
+      <div class="about-values">
+        <div class="value-item">
+          <h4>Excelencia Académica</h4>
+          <p>Currículum desarrollado con estándares internacionales de la industria vinícola, adaptado al contexto dominicano.</p>
+        </div>
+        <div class="value-item">
+          <h4>Identidad Caribeña</h4>
+          <p>Énfasis en el maridaje con la gastronomía dominicana y el estudio del comportamiento del vino en climas tropicales.</p>
+        </div>
+        <div class="value-item">
+          <h4>Formación Sensorial</h4>
+          <p>Metodología basada en el análisis sensorial riguroso y el desarrollo del paladar a través de la práctica.</p>
+        </div>
+        <div class="value-item">
+          <h4>Acceso y Difusión</h4>
+          <p>Comprometidos con democratizar el conocimiento del vino a través de la educación, el podcast y la tecnología.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMAS -->
+  <section id="programas">
+    <div style="max-width:1100px; margin:0 auto;">
+      <div class="section-label">Oferta Académica</div>
+      <h2 class="section-title">Programas de <em>Formación</em></h2>
+    </div>
+    <div class="programs-grid">
+      <div class="program-card">
+        <div class="program-level">Nivel I</div>
+        <h3>Bronce</h3>
+        <p>Introducción a la cultura del vino. Ideal para entusiastas y profesionales de la hospitalidad que desean una base sólida.</p>
+        <ul>
+          <li>Fundamentos de la viticultura</li>
+          <li>Introducción a la cata</li>
+          <li>Principales regiones del mundo</li>
+          <li>Maridaje básico</li>
+          <li>Servicio y temperatura</li>
+        </ul>
+      </div>
+      <div class="program-card featured">
+        <div class="featured-badge">Más popular</div>
+        <div class="program-level">Nivel II</div>
+        <h3>Plata</h3>
+        <p>Formación intermedia para profesionales del sector gastronómico y de bebidas que buscan profundizar su conocimiento.</p>
+        <ul>
+          <li>Análisis sensorial SAT</li>
+          <li>Enología avanzada</li>
+          <li>Espumosos y fortificados</li>
+          <li>Maridaje con gastronomía dominicana</li>
+          <li>Gestión de carta de vinos</li>
+        </ul>
+      </div>
+      <div class="program-card">
+        <div class="program-level">Nivel III</div>
+        <h3>Oro</h3>
+        <p>Programa avanzado para candidatos a sommelier profesional. Preparación para certificaciones internacionales.</p>
+        <ul>
+          <li>Cata a ciegas profesional</li>
+          <li>Bebidas espirituosas</li>
+          <li>Gestión de bodega y compras</li>
+          <li>Servicio de alto nivel</li>
+          <li>Preparación para exámenes</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:3rem;">
+      <a href="#contacto" class="btn-primary">Solicitar Información</a>
+    </div>
+  </section>
+
+  <!-- DIRECTOR -->
+  <section class="director" id="director">
+    <div class="director-grid">
+      <div class="director-portrait">
+        <span class="portrait-initials">HG</span>
+      </div>
+      <div class="director-info">
+        <div class="section-label">Fundador y Director Académico</div>
+        <h3>Héctor<br>García</h3>
+        <div class="title">Sommelier Profesional · WSET · AIS · WSA · ADS</div>
+        <p>
+          Héctor García es el sommelier más reconocido de la República Dominicana, con más de 12 años de trayectoria en la educación y la cultura del vino en el Caribe. Certificado por WSET, AIS, WSA y ADS.
+        </p>
+        <p>
+          Doctor en Enología y candidato en proceso al título de Master Sommelier, ha formado a más de 500 profesionales y entusiastas en la República Dominicana a través de clases, conferencias y su academia digital.
+        </p>
+        <p>
+          Es el host del podcast <em>"Vino a Conversar"</em>, donde la enología se convierte en conversación accesible para todos los públicos.
+        </p>
+        <div class="credentials">
+          <div class="credential">WSET — Wine & Spirit Education Trust</div>
+          <div class="credential">AIS — Associazione Italiana Sommelier</div>
+          <div class="credential">WSA — World Sommeliers Association</div>
+          <div class="credential">ADS — Asociación Dominicana de Sommeliers</div>
+          <div class="credential">Fundador de El Sommelier RD</div>
+          <div class="credential">Host · Podcast "Vino a Conversar"</div>
+          <div class="credential">Autor · "Dime tu carácter y te diré qué vino te gusta"</div>
+          <div class="credential">Especialista en maridaje con cocina dominicana</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contact" id="contacto">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="section-label">Información de Contacto</div>
+        <h3 class="section-title">Escríbenos</h3>
+        <div class="contact-item">
+          <div class="label">Correo Institucional</div>
+          <div class="value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e283818386878f8b83a2878e918d8f8f878e8b87909086cc878697cc868d">[email&#160;protected]</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Sitio Web</div>
+          <div class="value">elsommelierrd.edu.do</div>
+        </div>
+        <div class="contact-item">
+          <div class="label">País</div>
+          <div class="value">República Dominicana</div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Podcast</div>
+          <div class="value">Vino a Conversar</div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Redes Sociales</div>
+          <div class="value">@elsommelierrd</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Formulario</div>
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label>Nombre completo</label>
+            <input type="text" name="nombre" placeholder="Tu nombre" required />
           </div>
-        </div>
-
-        <div id="chat-messages">
-          <div class="msg maestro">
-            <div class="msg-label">El Maestro</div>
-            <div class="msg-bubble">Bienvenido a mi universo. Soy tu Sommelier de Cabecera — el primer sommelier digital dominicano. Puedes preguntarme sobre vinos, maridajes con nuestra gastronomia, tecnicas de cata, o cualquier duda del mundo vinicola. En que puedo servirte hoy?</div>
+          <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" name="email" placeholder="tu@correo.com" required />
           </div>
-        </div>
-
-        <div class="chat-input-area">
-          <textarea id="chat-input" class="chat-input" placeholder="Pregunta al Maestro..." rows="1"></textarea>
-          <button id="send-btn" class="send-btn" onclick="sendMessage()">&#10148;</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ─── CATA LAB ─── -->
-    <div class="section" id="sec-catalab">
-      <div class="hero" style="padding: 1rem 0 1.5rem;">
-        <div class="hero-greeting">Cata Lab</div>
-        <h1 class="hero-title" style="font-size: 1.8rem;">Escanea <em>etiquetas</em><br/>con IA</h1>
-        <p class="hero-sub">Toma una foto de la etiqueta de cualquier vino y El Maestro te dara toda la informacion.</p>
-      </div>
-
-      <div class="cata-upload-zone" onclick="document.getElementById('cata-file').click()">
-        <div class="icon">📸</div>
-        <div class="title">Toca para escanear etiqueta</div>
-        <div class="subtitle">Sube una foto o usa tu camara</div>
-        <input type="file" id="cata-file" accept="image/*" capture="environment" onchange="handleCataUpload(event)" />
-      </div>
-
-      <div class="cata-preview" id="cata-preview">
-        <img id="cata-preview-img" src="" alt="Preview" />
-        <button class="btn-primary" onclick="analizarEtiqueta()">&#10070; Analizar con El Maestro</button>
-      </div>
-
-      <div id="cata-result"></div>
-    </div>
-
-    <!-- ─── MARIDAJE ─── -->
-    <div class="section" id="sec-maridaje">
-      <div class="hero" style="padding: 1rem 0 1.5rem;">
-        <div class="hero-greeting">Motor de maridaje</div>
-        <h1 class="hero-title" style="font-size: 1.8rem;">Cocina <em>dominicana</em><br/>+ vino mundial</h1>
-      </div>
-
-      <div class="maridaje-input-group">
-        <label>Platos tradicionales</label>
-        <div class="platos-grid" id="platos-grid">
-          <button class="plato-chip" onclick="selectPlato(this)">Mofongo</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Sancocho</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Chivo guisado</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Pastelon</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Mangu</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Pollo guisado</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Pescado al coco</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Chicharron</button>
-          <button class="plato-chip" onclick="selectPlato(this)">La Bandera</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Locrio de pollo</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Asopao</button>
-          <button class="plato-chip" onclick="selectPlato(this)">Yaroa</button>
-        </div>
-      </div>
-
-      <div class="maridaje-input-group">
-        <label>O escribe tu plato</label>
-        <input type="text" id="plato-input" placeholder="Ej: Pernil de cerdo asado..." />
-      </div>
-
-      <div class="maridaje-input-group">
-        <label>Presupuesto</label>
-        <select id="presupuesto-select">
-          <option value="cualquiera">Sin limite</option>
-          <option value="menos de $20 USD">Hasta $20 USD</option>
-          <option value="$20 a $50 USD">$20 - $50 USD</option>
-          <option value="$50 a $100 USD">$50 - $100 USD</option>
-          <option value="mas de $100 USD">Mas de $100 USD</option>
-        </select>
-      </div>
-
-      <button class="btn-primary" id="maridaje-btn" onclick="buscarMaridaje()">
-        &#10070; Descubrir Maridaje
-      </button>
-
-      <div id="maridaje-result" class="maridaje-result" style="display:none;"></div>
-    </div>
-
-    <!-- ─── VINOS ─── -->
-    <div class="section" id="sec-vinos">
-      <div class="hero" style="padding: 1rem 0 1rem;">
-        <div class="hero-greeting">Catalogo</div>
-        <h1 class="hero-title" style="font-size: 1.8rem;">Explora <em>vinos</em></h1>
-      </div>
-
-      <div class="search-bar">
-        <input type="text" id="vino-search" class="search-input" placeholder="Buscar vino, varietal, region..." />
-        <button class="search-btn" onclick="buscarVinos()">&#8981;</button>
-      </div>
-
-      <div class="filter-pills">
-        <button class="filter-pill active" onclick="filterVinos(this, 'todos')">Todos</button>
-        <button class="filter-pill" onclick="filterVinos(this, 'tinto')"><span class="dot" style="background:#722F37"></span>Tintos</button>
-        <button class="filter-pill" onclick="filterVinos(this, 'blanco')"><span class="dot" style="background:#E8D5A3"></span>Blancos</button>
-        <button class="filter-pill" onclick="filterVinos(this, 'espumoso')"><span class="dot" style="background:#F5EFE0"></span>Espumosos</button>
-        <button class="filter-pill" onclick="filterVinos(this, 'rosado')"><span class="dot" style="background:#FFB7C5"></span>Rosados</button>
-      </div>
-
-      <div id="vinos-list">
-        <div class="loading-spinner">
-          <div class="spinner"></div>
-          <span>Cargando bodega...</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ─── BODEGA ─── -->
-    <div class="section" id="sec-bodega">
-      <div class="hero" style="padding: 1rem 0 1.5rem;">
-        <div class="hero-greeting">Mi Bodega Personal</div>
-        <h1 class="hero-title" style="font-size: 1.8rem;">Tu <em>coleccion</em></h1>
-      </div>
-
-      <div class="bodega-stats">
-        <div class="bodega-stat">
-          <div class="value" id="bodega-total">0</div>
-          <div class="label">Botellas</div>
-        </div>
-        <div class="bodega-stat">
-          <div class="value" id="bodega-tipos">0</div>
-          <div class="label">Varietales</div>
-        </div>
-        <div class="bodega-stat">
-          <div class="value" id="bodega-paises">0</div>
-          <div class="label">Paises</div>
-        </div>
-      </div>
-
-      <div id="bodega-list">
-        <div class="bodega-empty">
-          <div class="icon">🍾</div>
-          <div class="title">Tu bodega esta vacia</div>
-          <div class="subtitle">Escanea vinos con Cata Lab o agrega desde el catalogo para comenzar tu coleccion personal.</div>
-        </div>
-      </div>
-
-      <button class="btn-primary" onclick="goSection('catalab')" style="margin-top:1rem;">&#10070; Escanear primer vino</button>
-    </div>
-
-    <!-- ─── ACADEMIA ─── -->
-    <div class="section" id="sec-academia">
-      <div class="hero" style="padding: 1rem 0 1.5rem;">
-        <div class="hero-greeting">Academia El Sommelier RD</div>
-        <h1 class="hero-title" style="font-size: 1.8rem;">Tu camino al <em>vino</em></h1>
-      </div>
-
-      <div class="nivel-badge bronce">&#129353; Nivel Bronce - Activo</div>
-
-      <div class="xp-bar-container">
-        <div class="xp-bar-label">
-          <span>Progreso</span>
-          <span id="xp-text">0 / 1000 XP</span>
-        </div>
-        <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div>
-      </div>
-
-      <div class="divider"><span>Modulo 1 — Fundamentos</span></div>
-
-      <div id="lecciones-list">
-        <div class="loading-spinner">
-          <div class="spinner"></div>
-          <span>Cargando lecciones...</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ─── PERFIL ─── -->
-    <div class="section" id="sec-perfil">
-      <div class="perfil-hero">
-        <div class="perfil-avatar">S</div>
-        <div class="perfil-nombre">Estudiante</div>
-        <div class="perfil-nivel">Nivel Bronce - Iniciado</div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-value">0</div>
-          <div class="stat-label">Lecciones</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value">0</div>
-          <div class="stat-label">XP</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value">0</div>
-          <div class="stat-label">Racha dias</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-label">Plan actual</div>
-        <div class="card-title">Bronce — Gratuito</div>
-        <div class="card-body">15 lecciones - Quiz interactivos - Acceso a El Maestro AI</div>
-      </div>
-
-      <div class="card" style="border-color: rgba(184,134,11,0.35);">
-        <div class="card-label" style="color: var(--gold);">Actualizar a Plata</div>
-        <div class="card-title">$9.99 / mes</div>
-        <div class="card-body">18 lecciones avanzadas - Cata Lab SAT - Bodega personal - Sin limites con El Maestro</div>
-      </div>
-
-      <div class="card" style="border-color: rgba(184,134,11,0.55);">
-        <div class="card-label" style="color: var(--gold-light);">Actualizar a Oro</div>
-        <div class="card-title">$29.99 / mes</div>
-        <div class="card-body">12 lecciones master - Certificacion SAT - Spider Graph avanzado - Maridaje personalizado - Soporte prioritario</div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<script>
-  // ─── CONFIG ───
-  const API_BASE = 'https://elsommelier-backend.vercel.app';
-
-  // ─── STATE ───
-  let chatHistory = [];
-  let isTyping = false;
-  let allVinos = [];
-  let cataImageData = null;
-
-  // ─── SPLASH ───
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('splash').classList.add('hidden');
-      document.getElementById('app').classList.add('visible');
-      loadVinos();
-      loadLecciones();
-      loadBodega();
-      animateXP(320, 1000);
-    }, 2000);
-  });
-
-  // ─── NAVEGACION ───
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => goSection(btn.dataset.section));
-  });
-
-  function goSection(id) {
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    const navBtn = document.querySelector(`[data-section="${id}"]`);
-    if (navBtn) navBtn.classList.add('active');
-    document.getElementById(`sec-${id}`).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ─── CHAT ───
-  const chatInput = document.getElementById('chat-input');
-  chatInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
-  chatInput.addEventListener('input', () => {
-    chatInput.style.height = 'auto';
-    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
-  });
-
-  async function sendMessage() {
-    const msg = chatInput.value.trim();
-    if (!msg || isTyping) return;
-
-    addMsg('user', msg);
-    chatInput.value = '';
-    chatInput.style.height = 'auto';
-    chatHistory.push({ role: 'user', content: msg });
-
-    const typing = addTyping();
-    isTyping = true;
-    document.getElementById('send-btn').disabled = true;
-
-    try {
-      const res = await fetch(`${API_BASE}/api/sommelier`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mensaje: msg, historial: chatHistory.slice(-10) })
-      });
-      const data = await res.json();
-      typing.remove();
-      const reply = data.respuesta || data.error || 'El Maestro no pudo responder en este momento.';
-      addMsg('maestro', reply);
-      chatHistory.push({ role: 'assistant', content: reply });
-    } catch {
-      typing.remove();
-      addMsg('maestro', 'Hay una interrupcion en la conexion con El Maestro. Verifica el backend y vuelve a intentar.');
-    }
-
-    isTyping = false;
-    document.getElementById('send-btn').disabled = false;
-  }
-
-  function addMsg(role, text) {
-    const container = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    div.className = `msg ${role}`;
-    div.innerHTML = `
-      <div class="msg-label">${role === 'user' ? 'Tu' : 'El Maestro'}</div>
-      <div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div>
-    `;
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
-    return div;
-  }
-
-  function addTyping() {
-    const container = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    div.className = 'msg maestro';
-    div.innerHTML = `
-      <div class="msg-label">El Maestro</div>
-      <div class="typing-indicator">
-        <span></span><span></span><span></span>
-      </div>
-    `;
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
-    return div;
-  }
-
-  // ─── CATA LAB ───
-  function handleCataUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      cataImageData = e.target.result;
-      document.getElementById('cata-preview-img').src = cataImageData;
-      document.getElementById('cata-preview').style.display = 'block';
-      document.getElementById('cata-result').innerHTML = '';
-    };
-    reader.readAsDataURL(file);
-  }
-
-  async function analizarEtiqueta() {
-    if (!cataImageData) { showToast('Sube una imagen primero'); return; }
-
-    const result = document.getElementById('cata-result');
-    result.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><span>El Maestro analiza la etiqueta...</span></div>';
-
-    try {
-      const res = await fetch(`${API_BASE}/api/cata-lab`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imagen: cataImageData })
-      });
-      const data = await res.json();
-
-      if (data.analisis) {
-        result.innerHTML = `
-          <div class="card" style="border-left: 3px solid var(--gold);">
-            <div class="card-label">Analisis del Maestro</div>
-            <div class="card-body">${data.analisis.replace(/\n/g, '<br>')}</div>
+          <div class="form-group">
+            <label>Programa de interés</label>
+            <select name="programa" required>
+              <option value="">Selecciona un programa</option>
+              <option>Nivel Bronce — Introducción</option>
+              <option>Nivel Plata — Intermedio</option>
+              <option>Nivel Oro — Avanzado</option>
+              <option>Información general</option>
+            </select>
           </div>
-        `;
-        if (data.maridajes) {
-          result.innerHTML += `
-            <div class="consejo-maestro">
-              <div class="label">&#10070; Maridajes sugeridos</div>
-              <p>${data.maridajes}</p>
-            </div>
-          `;
-        }
-      } else {
-        result.innerHTML = `<div class="card"><div class="card-body">El Maestro no pudo analizar la etiqueta. Intenta con otra foto mas clara.</div></div>`;
-      }
-    } catch {
-      result.innerHTML = `<div class="card"><div class="card-body" style="color:var(--text-dim)">Error de conexion con Cata Lab. Verifica el backend.</div></div>`;
-    }
-  }
-
-  // ─── MARIDAJE ───
-  let platoSeleccionado = '';
-
-  function selectPlato(el) {
-    document.querySelectorAll('.plato-chip').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    platoSeleccionado = el.textContent;
-    document.getElementById('plato-input').value = '';
-  }
-
-  async function buscarMaridaje() {
-    const plato = document.getElementById('plato-input').value.trim() || platoSeleccionado;
-    if (!plato) { showToast('Selecciona o escribe un plato'); return; }
-    const presupuesto = document.getElementById('presupuesto-select').value;
-    const btn = document.getElementById('maridaje-btn');
-    const result = document.getElementById('maridaje-result');
-
-    btn.disabled = true;
-    btn.textContent = '✦ Consultando al Maestro...';
-    result.style.display = 'block';
-    result.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><span>El Maestro esta eligiendo...</span></div>';
-
-    try {
-      const res = await fetch(`${API_BASE}/api/maridaje`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plato, presupuesto })
-      });
-      const data = await res.json();
-      renderMaridaje(data, plato);
-    } catch {
-      result.innerHTML = '<div class="card-body" style="color:var(--text-dim)">No se pudo conectar con el motor de maridaje. Verifica la conexion.</div>';
-    }
-
-    btn.disabled = false;
-    btn.textContent = '✦ Descubrir Maridaje';
-  }
-
-  function renderMaridaje(data, plato) {
-    const result = document.getElementById('maridaje-result');
-    if (data.respuesta_libre) {
-      result.innerHTML = `<div class="card"><div class="card-label">El Maestro dice</div><div class="card-body">${data.respuesta_libre}</div></div>`;
-      return;
-    }
-    let html = `<div class="card-label" style="margin-bottom:0.5rem">Maridajes para ${plato}</div>`;
-    (data.maridajes || []).forEach(v => {
-      html += `
-        <div class="maridaje-vino-card">
-          <div class="maridaje-vino-name">${v.vino}</div>
-          <div class="maridaje-vino-region">${v.varietal || ''} - ${v.region || ''}</div>
-          <div class="maridaje-vino-razon">${v.razon}</div>
-          ${v.nota_poetica ? `<div class="maridaje-vino-poetica">${v.nota_poetica}</div>` : ''}
-        </div>
-      `;
-    });
-    if (data.consejo_maestro) {
-      html += `<div class="consejo-maestro"><div class="label">&#10070; Consejo del Maestro</div><p>${data.consejo_maestro}</p></div>`;
-    }
-    result.innerHTML = html;
-  }
-
-  // ─── VINOS ───
-  async function loadVinos() {
-    try {
-      const res = await fetch(`${API_BASE}/api/vinos`);
-      const data = await res.json();
-      allVinos = data.vinos || [];
-      renderVinos(allVinos);
-    } catch {
-      document.getElementById('vinos-list').innerHTML = '<div class="card-body" style="color:var(--text-dim);padding:1rem">Sin conexion al catalogo. Verifica el backend.</div>';
-    }
-  }
-
-  async function buscarVinos() {
-    const q = document.getElementById('vino-search').value.trim();
-    if (!q) { renderVinos(allVinos); return; }
-    const url = `${API_BASE}/api/vinos?varietal=${encodeURIComponent(q)}`;
-    const list = document.getElementById('vinos-list');
-    list.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><span>Buscando...</span></div>';
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      renderVinos(data.vinos || []);
-    } catch {
-      list.innerHTML = '<div class="card-body" style="color:var(--text-dim);padding:1rem">Error en la busqueda.</div>';
-    }
-  }
-
-  function filterVinos(el, tipo) {
-    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    if (tipo === 'todos') {
-      renderVinos(allVinos);
-    } else {
-      const filtered = allVinos.filter(v => (v.tipo || '').toLowerCase() === tipo);
-      renderVinos(filtered);
-    }
-  }
-
-  const COLORES_VINO = {
-    'tinto': '#722F37', 'blanco': '#E8D5A3', 'rosado': '#FFB7C5',
-    'espumoso': '#F5EFE0', 'naranja': '#E8882A', 'dulce': '#C8860B'
-  };
-
-  function renderVinos(vinos) {
-    const list = document.getElementById('vinos-list');
-    if (!vinos.length) {
-      list.innerHTML = '<div class="card-body" style="color:var(--text-dim);padding:1rem">No se encontraron vinos.</div>';
-      return;
-    }
-    list.innerHTML = vinos.map(v => {
-      const tipo = (v.tipo || 'tinto').toLowerCase();
-      const color = COLORES_VINO[tipo] || '#722F37';
-      return `
-        <div class="vino-item" onclick="addToBodega('${(v.nombre || '').replace(/'/g, "\\'")}')">
-          <div class="vino-color-dot" style="background:${color}"></div>
-          <div class="vino-info">
-            <div class="vino-nombre">${v.nombre}</div>
-            <div class="vino-meta">${v.varietal || 'Blend'} - ${v.region || 'Sin region'} - ${v.anada || '—'}</div>
+          <div class="form-group">
+            <label>Mensaje</label>
+            <textarea name="mensaje" placeholder="¿En qué podemos ayudarte?" required></textarea>
           </div>
-          ${v.precio ? `<div class="vino-precio">$${v.precio}</div>` : ''}
-        </div>
-      `;
-    }).join('');
-  }
-
-  // ─── BODEGA ───
-  function loadBodega() {
-    const bodega = JSON.parse(localStorage.getItem('mi_bodega') || '[]');
-    updateBodegaUI(bodega);
-  }
-
-  function addToBodega(nombre) {
-    let bodega = JSON.parse(localStorage.getItem('mi_bodega') || '[]');
-    if (bodega.includes(nombre)) {
-      showToast('Ya esta en tu bodega');
-      return;
-    }
-    bodega.push(nombre);
-    localStorage.setItem('mi_bodega', JSON.stringify(bodega));
-    updateBodegaUI(bodega);
-    showToast('Agregado a tu bodega');
-  }
-
-  function removeFromBodega(nombre) {
-    let bodega = JSON.parse(localStorage.getItem('mi_bodega') || '[]');
-    bodega = bodega.filter(v => v !== nombre);
-    localStorage.setItem('mi_bodega', JSON.stringify(bodega));
-    updateBodegaUI(bodega);
-    showToast('Removido de tu bodega');
-  }
-
-  function updateBodegaUI(bodega) {
-    document.getElementById('bodega-total').textContent = bodega.length;
-
-    const matching = allVinos.filter(v => bodega.includes(v.nombre));
-    const varietales = new Set(matching.map(v => v.varietal).filter(Boolean));
-    const paises = new Set(matching.map(v => v.region).filter(Boolean));
-
-    document.getElementById('bodega-tipos').textContent = varietales.size;
-    document.getElementById('bodega-paises').textContent = paises.size;
-
-    const list = document.getElementById('bodega-list');
-    if (bodega.length === 0) {
-      list.innerHTML = `
-        <div class="bodega-empty">
-          <div class="icon">🍾</div>
-          <div class="title">Tu bodega esta vacia</div>
-          <div class="subtitle">Escanea vinos con Cata Lab o agrega desde el catalogo para comenzar tu coleccion personal.</div>
-        </div>
-      `;
-      return;
-    }
-
-    list.innerHTML = bodega.map(nombre => {
-      const vino = allVinos.find(v => v.nombre === nombre);
-      const tipo = vino ? (vino.tipo || 'tinto').toLowerCase() : 'tinto';
-      const color = COLORES_VINO[tipo] || '#722F37';
-      return `
-        <div class="vino-item">
-          <div class="vino-color-dot" style="background:${color}"></div>
-          <div class="vino-info">
-            <div class="vino-nombre">${nombre}</div>
-            ${vino ? `<div class="vino-meta">${vino.varietal || 'Blend'} - ${vino.region || ''}</div>` : ''}
-          </div>
-          <button onclick="removeFromBodega('${nombre.replace(/'/g, "\\'")}')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:1.1rem;" title="Remover">&#10005;</button>
-        </div>
-      `;
-    }).join('');
-  }
-
-  // ─── ACADEMIA ───
-  async function loadLecciones() {
-    try {
-      const lecciones = [
-        { num: '01', titulo: 'El mundo del vino: una introduccion', dur: '8 min', completada: true },
-        { num: '02', titulo: 'Variedades de uva: blancos del mundo', dur: '12 min', completada: true },
-        { num: '03', titulo: 'Variedades de uva: tintos esenciales', dur: '14 min', completada: false },
-        { num: '04', titulo: 'Regiones vitivinicolas del Viejo Mundo', dur: '18 min', completada: false },
-        { num: '05', titulo: 'El Nuevo Mundo y sus expresiones', dur: '15 min', completada: false },
-        { num: '06', titulo: 'El proceso de vinificacion', dur: '16 min', completada: false },
-        { num: '07', titulo: 'Crianza: barrica y botella', dur: '12 min', completada: false },
-        { num: '08', titulo: 'Metodologia SAT de cata', dur: '20 min', completada: false },
-        { num: '09', titulo: 'Aromas primarios, secundarios y terciarios', dur: '15 min', completada: false },
-        { num: '10', titulo: 'Temperatura y servicio del vino', dur: '10 min', completada: false },
-        { num: '11', titulo: 'Maridaje: principios fundamentales', dur: '14 min', completada: false },
-        { num: '12', titulo: 'Maridaje con gastronomia dominicana', dur: '18 min', completada: false },
-        { num: '13', titulo: 'Vinos espumosos y champagne', dur: '16 min', completada: false },
-        { num: '14', titulo: 'Vinos dulces y fortificados', dur: '12 min', completada: false },
-        { num: '15', titulo: 'Tu primer analisis SAT completo', dur: '25 min', completada: false },
-      ];
-      renderLecciones(lecciones);
-    } catch {
-      document.getElementById('lecciones-list').innerHTML = '<div class="card-body" style="color:var(--text-dim)">Error cargando lecciones.</div>';
-    }
-  }
-
-  function renderLecciones(lecciones) {
-    document.getElementById('lecciones-list').innerHTML = lecciones.map(l => `
-      <div class="leccion-card ${l.completada ? 'completada' : ''}" onclick="showToast('Leccion ${l.num}: proximamente activa')">
-        <div class="leccion-num">${l.completada ? '&#10003;' : l.num}</div>
-        <div>
-          <div class="leccion-titulo">${l.titulo}</div>
-          <div class="leccion-dur">${l.dur}</div>
-        </div>
-        <div class="leccion-arrow">&#8250;</div>
+          <button class="btn-primary" type="submit" id="submitBtn">Enviar Mensaje</button>
+          <div id="formMsg" style="display:none; font-size:0.85rem; margin-top:0.8rem; color:var(--gold);"></div>
+        </form>
       </div>
-    `).join('');
-  }
+    </div>
+  </section>
 
-  // ─── XP BAR ───
-  function animateXP(xp, max) {
-    document.getElementById('xp-text').textContent = `${xp} / ${max} XP`;
-    setTimeout(() => {
-      document.getElementById('xp-fill').style.width = `${(xp / max) * 100}%`;
-    }, 500);
-  }
-
-  // ─── TOAST ───
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
-  }
-
-  // ─── SERVICE WORKER ───
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
-</script>
-</body>
-</html>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">Academia El Sommelier RD</div>
+    <div class="footer-info">
+      © 2026 · Institución educativa vinícola · República Dominicana<br>
+  

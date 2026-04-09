@@ -1005,6 +1005,112 @@
       color: var(--text-dim); font-family: 'DM Mono', monospace; font-size: 0.75rem;
     }
 
+    /* ── VINO OVERLAY ── */
+    .vino-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: #0d0d0d;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    .vino-overlay.open { transform: translateX(0); }
+    .vino-overlay-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+      flex-shrink: 0;
+    }
+    .vino-overlay-body {
+      flex: 1; overflow-y: auto;
+      padding: 0 0 4rem;
+    }
+    .vino-hero {
+      position: relative; height: 200px; overflow: hidden;
+      background: linear-gradient(135deg, #1a0a00 0%, #2a1000 100%);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .vino-hero-img {
+      height: 100%; width: 100%; object-fit: cover; opacity: 0.6;
+    }
+    .vino-hero-badge {
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.3rem 0.7rem;
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .vino-overlay-content { padding: 1.5rem 1.2rem; }
+    .vino-overlay-nombre {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem; color: var(--cream);
+      line-height: 1.15; margin-bottom: 0.3rem;
+    }
+    .vino-overlay-bodega {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; color: var(--gold);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .vino-detail-row {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem;
+    }
+    .vino-detail-chip {
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.3rem 0.7rem;
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.07em; color: var(--cream-dim);
+    }
+    .vino-seccion-titulo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.14em;
+      color: var(--gold); text-transform: uppercase;
+      margin: 1.6rem 0 0.7rem;
+    }
+    .vino-nota-cata {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; line-height: 1.8;
+      color: var(--cream-dim);
+    }
+    .vino-maridaje-tag {
+      display: inline-block;
+      background: rgba(184,134,11,0.08);
+      border: 1px solid rgba(184,134,11,0.25);
+      border-radius: var(--radius-sm);
+      padding: 0.35rem 0.8rem; margin: 0.25rem 0.25rem 0 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem; color: var(--cream-dim);
+    }
+    .vino-rating-big {
+      display: flex; align-items: baseline; gap: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+    .vino-rating-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem; color: var(--gold); line-height: 1;
+    }
+    .vino-rating-stars { color: var(--gold); font-size: 1rem; }
+    .vino-bodega-btn {
+      display: block; width: 100%;
+      margin-top: 2rem; padding: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #1a1000; font-weight: 700;
+      font-family: 'DM Mono', monospace; font-size: 0.75rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: none; border-radius: var(--radius);
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .vino-bodega-btn:hover { opacity: 0.9; }
+    .vino-bodega-btn.ya-agregado {
+      background: transparent;
+      border: 1px solid var(--border); color: var(--text-dim);
+    }
+
     /* ── TOAST ── */
     .toast {
       position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
@@ -1406,6 +1512,23 @@
   </div>
 </div>
 
+<!-- VISOR DE VINO -->
+<div class="vino-overlay" id="vino-overlay">
+  <div class="vino-overlay-header">
+    <button class="leccion-back-btn" onclick="cerrarVino()" aria-label="Volver">&#8592;</button>
+    <div class="leccion-header-info">
+      <div class="leccion-header-titulo" id="vino-overlay-titulo">Cargando...</div>
+      <div class="leccion-header-meta" id="vino-overlay-meta"></div>
+    </div>
+  </div>
+  <div class="vino-overlay-body" id="vino-overlay-body">
+    <div class="leccion-loading">
+      <div class="spinner"></div>
+      <span>Cargando vino...</span>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1691,19 +1814,20 @@
   };
 
   function renderVinos(vinos) {
+    vinosActuales = vinos;
     const list = document.getElementById('vinos-list');
     if (!vinos.length) {
       list.innerHTML = '<div class="card-body" style="color:var(--text-dim);padding:1rem">No se encontraron vinos.</div>';
       return;
     }
-    list.innerHTML = vinos.map(v => {
+    list.innerHTML = vinos.map((v, idx) => {
       const tipo = (v.tipo || 'tintos').toLowerCase();
       const color = COLORES_VINO[tipo] || '#722F37';
       const rating = v.rating ? `${v.rating.promedio} ★` : '';
       const imgHtml = v.imagen ? `<img src="${v.imagen}" alt="${v.nombre}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid var(--border);" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
           <div class="vino-color-dot" style="background:${color};display:none"></div>` : `<div class="vino-color-dot" style="background:${color}"></div>`;
       return `
-        <div class="vino-item" onclick="addToBodega('${(v.nombre || '').replace(/'/g, "\\'")}')">
+        <div class="vino-item" onclick="abrirVino(${idx})">
           ${imgHtml}
           <div class="vino-info">
             <div class="vino-nombre">${v.nombre}</div>
@@ -1713,6 +1837,109 @@
         </div>
       `;
     }).join('');
+  }
+
+  // ─── VISOR DE VINO ───
+  let vinosActuales = [];
+
+  function abrirVino(idx) {
+    const v = vinosActuales[idx];
+    if (!v) return;
+
+    const overlay = document.getElementById('vino-overlay');
+    document.getElementById('vino-overlay-titulo').textContent = v.nombre || 'Vino';
+    document.getElementById('vino-overlay-meta').textContent = [v.bodega, v.pais].filter(Boolean).join(' · ');
+
+    const tipo = (v.tipo || '').toLowerCase();
+    const color = COLORES_VINO[tipo] || '#722F37';
+    const rating = v.rating?.promedio;
+    const chips = [
+      v.tipo ? v.tipo.charAt(0).toUpperCase() + v.tipo.slice(1) : null,
+      v.pais,
+      v.region,
+      v.denominacion_origen,
+      v.varietal
+    ].filter(Boolean);
+
+    const bodega = JSON.parse(localStorage.getItem('mi_bodega') || '[]');
+    const yaEsta = bodega.includes(v.nombre);
+
+    const maridajesArr = Array.isArray(v.maridajes) ? v.maridajes : (v.maridajes ? [v.maridajes] : []);
+
+    document.getElementById('vino-overlay-body').innerHTML = `
+      <div class="vino-hero" style="background:linear-gradient(135deg,#1a0a00,#2a1000)">
+        ${v.imagen ? `<img class="vino-hero-img" src="${v.imagen}" alt="${v.nombre}" onerror="this.style.display='none'"/>` : `<div style="width:80px;height:80px;border-radius:50%;background:${color};opacity:0.5"></div>`}
+        ${v.tipo ? `<div class="vino-hero-badge">${v.tipo}</div>` : ''}
+      </div>
+      <div class="vino-overlay-content">
+        <div class="vino-overlay-nombre">${v.nombre}</div>
+        <div class="vino-overlay-bodega">${v.bodega || ''}</div>
+        <div class="vino-detail-row">
+          ${chips.map(c => `<span class="vino-detail-chip">${c}</span>`).join('')}
+        </div>
+
+        ${rating ? `
+          <div class="vino-seccion-titulo">Puntuación</div>
+          <div class="vino-rating-big">
+            <span class="vino-rating-num">${rating}</span>
+            <span class="vino-rating-stars">★</span>
+          </div>
+        ` : ''}
+
+        ${v.descripcion ? `
+          <div class="vino-seccion-titulo">Descripción</div>
+          <div class="vino-nota-cata">${v.descripcion}</div>
+        ` : ''}
+
+        ${v.notas_cata ? `
+          <div class="vino-seccion-titulo">Nota de Cata</div>
+          <div class="vino-nota-cata">${v.notas_cata}</div>
+        ` : ''}
+
+        ${maridajesArr.length ? `
+          <div class="vino-seccion-titulo">Maridajes</div>
+          <div>${maridajesArr.map(m => `<span class="vino-maridaje-tag">${m}</span>`).join('')}</div>
+        ` : ''}
+
+        ${v.precio_rango ? `
+          <div class="vino-seccion-titulo">Precio estimado</div>
+          <div class="vino-nota-cata" style="font-size:1.1rem">${v.precio_rango}</div>
+        ` : ''}
+
+        <button class="vino-bodega-btn ${yaEsta ? 'ya-agregado' : ''}" id="vino-bodega-btn" onclick="toggleBodegaDesdeVino('${(v.nombre || '').replace(/'/g, "\\'")}')">
+          ${yaEsta ? '✓ En tu bodega' : '+ Agregar a mi bodega'}
+        </button>
+      </div>
+    `;
+
+    document.getElementById('vino-overlay-body').scrollTop = 0;
+    overlay.classList.add('open');
+    history.pushState({ vinoOverlay: true }, '');
+  }
+
+  function cerrarVino() {
+    document.getElementById('vino-overlay').classList.remove('open');
+  }
+
+  function toggleBodegaDesdeVino(nombre) {
+    let bodega = JSON.parse(localStorage.getItem('mi_bodega') || '[]');
+    const yaEsta = bodega.includes(nombre);
+    if (yaEsta) {
+      bodega = bodega.filter(v => v !== nombre);
+      localStorage.setItem('mi_bodega', JSON.stringify(bodega));
+      updateBodegaUI(bodega);
+      showToast('Removido de tu bodega');
+    } else {
+      bodega.push(nombre);
+      localStorage.setItem('mi_bodega', JSON.stringify(bodega));
+      updateBodegaUI(bodega);
+      showToast('Agregado a tu bodega');
+    }
+    const btn = document.getElementById('vino-bodega-btn');
+    if (btn) {
+      btn.textContent = yaEsta ? '+ Agregar a mi bodega' : '✓ En tu bodega';
+      btn.className = `vino-bodega-btn ${yaEsta ? '' : 'ya-agregado'}`;
+    }
   }
 
   // ─── BODEGA ───
@@ -1935,6 +2162,8 @@
 
   // Cerrar con el botón físico de Android (back)
   window.addEventListener('popstate', () => {
+    const vinoOv = document.getElementById('vino-overlay');
+    if (vinoOv.classList.contains('open')) { cerrarVino(); return; }
     const overlay = document.getElementById('leccion-overlay');
     if (overlay.classList.contains('open')) { cerrarLeccion(); history.pushState(null, ''); }
   });

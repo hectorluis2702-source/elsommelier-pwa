@@ -1114,35 +1114,38 @@
     .rd-badge-wrap {
       position: relative;
       display: inline-block;
-      width: 160px;
-      height: 160px;
+      width: 150px;
+      height: 150px;
       flex-shrink: 0;
       border-radius: 50%;
       overflow: hidden;
-      background: transparent;
     }
     .rd-badge-img {
-      width: 160px;
-      height: 160px;
+      /* zoom 1.18 para eliminar borde blanco exterior */
+      width: 177px;
+      height: 177px;
       display: block;
+      margin: -13.5px;
       object-fit: cover;
-      border-radius: 50%;
     }
     .rd-badge-num {
       position: absolute;
-      top: 26%;
+      top: 19%;
       left: 50%;
       transform: translateX(-50%);
       font-family: Georgia, 'Times New Roman', serif;
       font-style: italic;
       font-weight: bold;
       color: #E8C840;
-      background: radial-gradient(ellipse at 50% 40%, #9B1C2E 0%, #7A1020 55%, #4E0A12 100%);
-      padding: 1px 14px 3px;
-      border-radius: 5px;
+      /* cubre el número original del JPEG fundiéndose con el fondo */
+      background: radial-gradient(ellipse 110% 130% at 50% 60%, #9B1C2E 0%, #7A1020 45%, #6B0F1A 100%);
+      padding: 4px 18px 6px;
+      border-radius: 50%;
       white-space: nowrap;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
       line-height: 1.1;
+      min-width: 68px;
+      text-align: center;
     }
 
     /* ── PUNTUACIONES DUAL ── */
@@ -1924,11 +1927,10 @@
   }
 
   // Calcula puntuación RD automáticamente si no hay valor manual
-  function calcularPuntuacionRD(puntuacion, fuente) {
+  function calcularPuntuacionRD(puntuacion) {
     if (!puntuacion) return null;
-    const esParker = fuente && (fuente.toLowerCase().includes('parker') || fuente.toLowerCase().includes('advocate'));
-    const resultado = esParker ? Math.max(85, puntuacion - 1) : puntuacion + 1;
-    return Math.min(100, resultado); // El Sommelier RD nunca supera 100
+    // Siempre 1 punto por debajo del oficial — máximo 100
+    return Math.min(100, Math.max(80, puntuacion - 1));
   }
 
   function abrirVino(idx) {
@@ -1943,7 +1945,7 @@
     const color = COLORES_VINO[tipo] || '#722F37';
     const puntuacion = v.rating?.promedio;
     const fuente = v.rating?.fuente;
-    const puntuacionRD = Math.min(100, v.puntuacion_rd || calcularPuntuacionRD(puntuacion, fuente) || 0) || null;
+    const puntuacionRD = Math.min(100, v.puntuacion_rd || calcularPuntuacionRD(puntuacion) || 0) || null;
 
     const chips = [
       v.tipo ? v.tipo.charAt(0).toUpperCase() + v.tipo.slice(1) : null,

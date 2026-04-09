@@ -881,6 +881,17 @@
       margin-top: 0.2rem;
     }
     .leccion-arrow { margin-left: auto; color: var(--text-dim); font-size: 0.8rem; }
+    .modulo-header {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-transform: uppercase;
+      padding: 1.2rem 0 0.6rem;
+      border-top: 1px solid var(--border);
+      margin-top: 0.5rem;
+    }
+    .modulo-header:first-child { border-top: none; margin-top: 0; padding-top: 0; }
 
     /* ── TOAST ── */
     .toast {
@@ -1642,41 +1653,40 @@
 
   // ─── ACADEMIA ───
   async function loadLecciones() {
+    const lista = document.getElementById('lecciones-list');
+    lista.innerHTML = '<div class="card-body" style="color:var(--text-dim);text-align:center;padding:2rem">Cargando lecciones...</div>';
     try {
-      const lecciones = [
-        { num: '01', titulo: 'El mundo del vino: una introduccion', dur: '8 min', completada: true },
-        { num: '02', titulo: 'Variedades de uva: blancos del mundo', dur: '12 min', completada: true },
-        { num: '03', titulo: 'Variedades de uva: tintos esenciales', dur: '14 min', completada: false },
-        { num: '04', titulo: 'Regiones vitivinicolas del Viejo Mundo', dur: '18 min', completada: false },
-        { num: '05', titulo: 'El Nuevo Mundo y sus expresiones', dur: '15 min', completada: false },
-        { num: '06', titulo: 'El proceso de vinificacion', dur: '16 min', completada: false },
-        { num: '07', titulo: 'Crianza: barrica y botella', dur: '12 min', completada: false },
-        { num: '08', titulo: 'Metodologia SAT de cata', dur: '20 min', completada: false },
-        { num: '09', titulo: 'Aromas primarios, secundarios y terciarios', dur: '15 min', completada: false },
-        { num: '10', titulo: 'Temperatura y servicio del vino', dur: '10 min', completada: false },
-        { num: '11', titulo: 'Maridaje: principios fundamentales', dur: '14 min', completada: false },
-        { num: '12', titulo: 'Maridaje con gastronomia dominicana', dur: '18 min', completada: false },
-        { num: '13', titulo: 'Vinos espumosos y champagne', dur: '16 min', completada: false },
-        { num: '14', titulo: 'Vinos dulces y fortificados', dur: '12 min', completada: false },
-        { num: '15', titulo: 'Tu primer analisis SAT completo', dur: '25 min', completada: false },
-      ];
-      renderLecciones(lecciones);
+      const res = await fetch(`${API_BASE}/api/academia/lecciones`);
+      const data = await res.json();
+      if (!data.success || !data.lecciones?.length) throw new Error('Sin lecciones');
+      renderLecciones(data.lecciones);
     } catch {
-      document.getElementById('lecciones-list').innerHTML = '<div class="card-body" style="color:var(--text-dim)">Error cargando lecciones.</div>';
+      lista.innerHTML = '<div class="card-body" style="color:var(--text-dim);text-align:center;padding:2rem">Error cargando lecciones. Verifica tu conexión.</div>';
     }
   }
 
   function renderLecciones(lecciones) {
-    document.getElementById('lecciones-list').innerHTML = lecciones.map(l => `
-      <div class="leccion-card ${l.completada ? 'completada' : ''}" onclick="showToast('Leccion ${l.num}: proximamente activa')">
-        <div class="leccion-num">${l.completada ? '&#10003;' : l.num}</div>
-        <div>
-          <div class="leccion-titulo">${l.titulo}</div>
-          <div class="leccion-dur">${l.dur}</div>
-        </div>
-        <div class="leccion-arrow">&#8250;</div>
-      </div>
-    `).join('');
+    const nivelLabel = { bronce: 'MÓDULO BRONCE — FUNDAMENTOS', plata: 'MÓDULO PLATA — INTERMEDIO', oro: 'MÓDULO ORO — AVANZADO' };
+    let html = '';
+    let nivelActual = null;
+    lecciones.forEach((l, i) => {
+      if (l.nivel !== nivelActual) {
+        nivelActual = l.nivel;
+        html += `<div class="modulo-header">${nivelLabel[l.nivel] || l.nivel.toUpperCase()}</div>`;
+      }
+      const num = String(l.orden || i + 1).padStart(2, '0');
+      const dur = l.duracion_estimada ? `${l.duracion_estimada} min` : '';
+      html += `
+        <div class="leccion-card" onclick="showToast('${l.titulo.replace(/'/g,"\\'")}')">
+          <div class="leccion-num">${num}</div>
+          <div>
+            <div class="leccion-titulo">${l.titulo}</div>
+            <div class="leccion-dur">${dur}</div>
+          </div>
+          <div class="leccion-arrow">&#8250;</div>
+        </div>`;
+    });
+    document.getElementById('lecciones-list').innerHTML = html;
   }
 
   // ─── XP BAR ───

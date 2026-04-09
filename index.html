@@ -893,6 +893,118 @@
     }
     .modulo-header:first-child { border-top: none; margin-top: 0; padding-top: 0; }
 
+    /* ── VISOR DE LECCIÓN ── */
+    .leccion-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: #0d0d0d;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    .leccion-overlay.open { transform: translateX(0); }
+    .leccion-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+      flex-shrink: 0;
+    }
+    .leccion-back-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--gold); border-radius: 50%;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.1rem; flex-shrink: 0;
+      transition: border-color 0.2s;
+    }
+    .leccion-back-btn:hover { border-color: var(--gold); }
+    .leccion-header-info { flex: 1; min-width: 0; }
+    .leccion-header-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; color: var(--cream);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .leccion-header-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-top: 0.2rem;
+    }
+    .leccion-body {
+      flex: 1; overflow-y: auto;
+      padding: 1.5rem 1.2rem 4rem;
+    }
+    .leccion-imagen {
+      width: 100%; height: 180px; object-fit: cover;
+      border-radius: var(--radius); margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    .leccion-seccion-titulo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.12em;
+      color: var(--gold); text-transform: uppercase;
+      margin: 1.8rem 0 0.8rem;
+    }
+    .leccion-contenido {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; line-height: 1.75;
+      color: var(--cream-dim);
+      white-space: pre-wrap;
+    }
+    .leccion-objetivo {
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(184,134,11,0.1);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem; color: var(--cream-dim); line-height: 1.5;
+    }
+    .leccion-objetivo::before {
+      content: '✦'; color: var(--gold); font-size: 0.6rem;
+      margin-top: 0.35rem; flex-shrink: 0;
+    }
+    .quiz-container { margin-top: 0.5rem; }
+    .quiz-pregunta {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .quiz-pregunta-texto {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; color: var(--cream); margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .quiz-opcion {
+      display: block; width: 100%; text-align: left;
+      padding: 0.7rem 1rem; margin-bottom: 0.5rem;
+      background: rgba(184,134,11,0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--cream-dim); cursor: pointer;
+      font-family: 'Cormorant Garamond', serif; font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .quiz-opcion:hover { border-color: var(--gold); color: var(--cream); }
+    .quiz-opcion.correcta { border-color: #2d8a4e; background: rgba(45,138,78,0.12); color: #7dcfa0; }
+    .quiz-opcion.incorrecta { border-color: #c0392b; background: rgba(192,57,43,0.1); color: #e07070; }
+    .leccion-completar-btn {
+      display: block; width: 100%;
+      margin-top: 2rem; padding: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #1a1000; font-weight: 700;
+      font-family: 'DM Mono', monospace; font-size: 0.75rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: none; border-radius: var(--radius);
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .leccion-completar-btn:hover { opacity: 0.9; }
+    .leccion-loading {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 4rem 2rem; gap: 1rem;
+      color: var(--text-dim); font-family: 'DM Mono', monospace; font-size: 0.75rem;
+    }
+
     /* ── TOAST ── */
     .toast {
       position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
@@ -1275,6 +1387,23 @@
     </div>
 
   </main>
+</div>
+
+<!-- VISOR DE LECCIÓN -->
+<div class="leccion-overlay" id="leccion-overlay">
+  <div class="leccion-header">
+    <button class="leccion-back-btn" onclick="cerrarLeccion()" aria-label="Volver">&#8592;</button>
+    <div class="leccion-header-info">
+      <div class="leccion-header-titulo" id="leccion-overlay-titulo">Cargando...</div>
+      <div class="leccion-header-meta" id="leccion-overlay-meta"></div>
+    </div>
+  </div>
+  <div class="leccion-body" id="leccion-overlay-body">
+    <div class="leccion-loading">
+      <div class="spinner"></div>
+      <span>Cargando lección...</span>
+    </div>
+  </div>
 </div>
 
 <!-- TOAST -->
@@ -1676,8 +1805,9 @@
       }
       const num = String(l.orden || i + 1).padStart(2, '0');
       const dur = l.duracion_estimada ? `${l.duracion_estimada} min` : '';
+      const slugSafe = (l.slug || '').replace(/'/g, "\\'");
       html += `
-        <div class="leccion-card" onclick="showToast('${l.titulo.replace(/'/g,"\\'")}')">
+        <div class="leccion-card" onclick="abrirLeccion('${slugSafe}', '${l.titulo.replace(/'/g, "\\'")}', '${dur}')">
           <div class="leccion-num">${num}</div>
           <div>
             <div class="leccion-titulo">${l.titulo}</div>
@@ -1688,6 +1818,126 @@
     });
     document.getElementById('lecciones-list').innerHTML = html;
   }
+
+  // ─── MARKDOWN BÁSICO ───
+  function mdToHtml(md) {
+    return md
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/^### (.+)$/gm, '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;color:var(--cream);margin:1.4rem 0 0.5rem">$1</h3>')
+      .replace(/^## (.+)$/gm,  '<h2 style="font-family:\'Cormorant Garamond\',serif;font-size:1.3rem;color:var(--cream);margin:1.8rem 0 0.6rem;border-bottom:1px solid var(--border);padding-bottom:0.4rem">$1</h2>')
+      .replace(/^# (.+)$/gm,   '<h1 style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;color:var(--cream);margin:0 0 1rem">$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--cream)">$1</strong>')
+      .replace(/\*(.+?)\*/g,     '<em style="color:var(--gold-light)">$1</em>')
+      .replace(/^- (.+)$/gm,    '<div class="leccion-objetivo">$1</div>')
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '\n');
+  }
+
+  // ─── VISOR DE LECCIÓN ───
+  async function abrirLeccion(slug, titulo, dur) {
+    const overlay = document.getElementById('leccion-overlay');
+    document.getElementById('leccion-overlay-titulo').textContent = titulo;
+    document.getElementById('leccion-overlay-meta').textContent = dur ? `${dur} de lectura` : '';
+    document.getElementById('leccion-overlay-body').innerHTML = `
+      <div class="leccion-loading"><div class="spinner"></div><span>Cargando lección...</span></div>`;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    try {
+      const res = await fetch(`${API_BASE}/api/academia/lecciones/${slug}`);
+      const data = await res.json();
+      if (!data.success) throw new Error('No encontrada');
+      renderLeccionDetalle(data.leccion);
+    } catch {
+      document.getElementById('leccion-overlay-body').innerHTML = `
+        <div class="leccion-loading" style="color:var(--text-dim)">No se pudo cargar esta lección. Intenta de nuevo.</div>`;
+    }
+  }
+
+  function renderLeccionDetalle(l) {
+    let html = '';
+
+    if (l.imagen_url) {
+      html += `<img src="${l.imagen_url}" alt="${l.titulo}" class="leccion-imagen" onerror="this.style.display='none'">`;
+    }
+
+    if (l.objetivos?.length) {
+      html += `<div class="leccion-seccion-titulo">Objetivos de aprendizaje</div>`;
+      l.objetivos.forEach(o => { html += `<div class="leccion-objetivo">${o}</div>`; });
+    }
+
+    if (l.contenido_teorico) {
+      html += `<div class="leccion-seccion-titulo">Contenido</div>`;
+      html += `<div class="leccion-contenido">${mdToHtml(l.contenido_teorico)}</div>`;
+    }
+
+    if (l.ejemplos_practicos) {
+      const ej = typeof l.ejemplos_practicos === 'string' ? JSON.parse(l.ejemplos_practicos) : l.ejemplos_practicos;
+      if (Array.isArray(ej) && ej.length) {
+        html += `<div class="leccion-seccion-titulo">Ejemplos prácticos</div>`;
+        ej.forEach(e => {
+          html += `<div class="quiz-pregunta"><div class="quiz-pregunta-texto">${e.titulo || e.descripcion || JSON.stringify(e)}</div>`;
+          if (e.detalle) html += `<div class="leccion-contenido" style="font-size:0.9rem">${e.detalle}</div>`;
+          html += `</div>`;
+        });
+      }
+    }
+
+    if (l.quiz) {
+      const quiz = typeof l.quiz === 'string' ? JSON.parse(l.quiz) : l.quiz;
+      const preguntas = Array.isArray(quiz) ? quiz : quiz.preguntas || [];
+      if (preguntas.length) {
+        html += `<div class="leccion-seccion-titulo">Quiz de repaso</div><div class="quiz-container">`;
+        preguntas.forEach((p, pi) => {
+          html += `<div class="quiz-pregunta">
+            <div class="quiz-pregunta-texto">${pi + 1}. ${p.pregunta}</div>`;
+          (p.opciones || []).forEach((op, oi) => {
+            html += `<button class="quiz-opcion" onclick="responderQuiz(this, ${oi === (p.correcta ?? p.respuesta_correcta)}, '${(p.explicacion || '').replace(/'/g,"\\'")}')">
+              ${String.fromCharCode(65 + oi)}) ${op}
+            </button>`;
+          });
+          html += `</div>`;
+        });
+        html += `</div>`;
+      }
+    }
+
+    html += `<button class="leccion-completar-btn" onclick="marcarCompletada('${l.slug}')">
+      ✦ Marcar como completada
+    </button>`;
+
+    document.getElementById('leccion-overlay-body').innerHTML = html;
+    document.getElementById('leccion-overlay-body').scrollTop = 0;
+  }
+
+  function responderQuiz(btn, esCorrecta, explicacion) {
+    const preguntaEl = btn.closest('.quiz-pregunta');
+    if (preguntaEl.querySelector('.correcta, .incorrecta')) return;
+    btn.classList.add(esCorrecta ? 'correcta' : 'incorrecta');
+    if (!esCorrecta) {
+      const correctaBtn = [...preguntaEl.querySelectorAll('.quiz-opcion')].find((b, i) => {
+        const text = b.textContent.trim();
+        return b !== btn;
+      });
+    }
+    if (explicacion) showToast(explicacion);
+  }
+
+  function marcarCompletada(slug) {
+    showToast('¡Lección completada! +50 XP');
+    setTimeout(() => cerrarLeccion(), 1200);
+  }
+
+  function cerrarLeccion() {
+    document.getElementById('leccion-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Cerrar con el botón físico de Android (back)
+  window.addEventListener('popstate', () => {
+    const overlay = document.getElementById('leccion-overlay');
+    if (overlay.classList.contains('open')) { cerrarLeccion(); history.pushState(null, ''); }
+  });
 
   // ─── XP BAR ───
   function animateXP(xp, max) {

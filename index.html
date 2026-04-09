@@ -1110,6 +1110,41 @@
       background: transparent;
       border: 1px solid var(--border); color: var(--text-dim);
     }
+    /* ── BADGE RD ── */
+    .rd-badge-wrap {
+      position: relative;
+      display: inline-block;
+      width: 160px;
+      height: 160px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      background: transparent;
+    }
+    .rd-badge-img {
+      width: 160px;
+      height: 160px;
+      display: block;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .rd-badge-num {
+      position: absolute;
+      top: 26%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      font-weight: bold;
+      color: #E8C840;
+      background: radial-gradient(ellipse at 50% 40%, #9B1C2E 0%, #7A1020 55%, #4E0A12 100%);
+      padding: 1px 14px 3px;
+      border-radius: 5px;
+      white-space: nowrap;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      line-height: 1.1;
+    }
+
     /* ── PUNTUACIONES DUAL ── */
     .puntuaciones-grid {
       display: flex; align-items: center; gap: 1.5rem;
@@ -1880,29 +1915,12 @@
   // Badge SVG de El Sommelier RD — medallón burgundy/dorado con puntuación dinámica
   // Badge usando el icono oficial de El Sommelier RD — sólo el número cambia
   function rdBadgeSVG(pts) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 138" width="200" height="138">
-      <defs>
-        <radialGradient id="numBg" cx="50%" cy="50%" r="60%">
-          <stop offset="0%"  style="stop-color:#9B1C2E"/>
-          <stop offset="60%" style="stop-color:#7A1020"/>
-          <stop offset="100%" style="stop-color:#5C0E18"/>
-        </radialGradient>
-        <linearGradient id="numGold" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   style="stop-color:#FAF0A0"/>
-          <stop offset="40%"  style="stop-color:#E8C840"/>
-          <stop offset="100%" style="stop-color:#B08010"/>
-        </linearGradient>
-      </defs>
-      <!-- Icono oficial El Sommelier RD -->
-      <image href="./assets/badge-rd.png" x="0" y="0" width="200" height="138"/>
-      <!-- Cubre el número "95" original -->
-      <rect x="52" y="37" width="96" height="42" rx="4" fill="url(#numBg)"/>
-      <!-- Número real dinámico -->
-      <text x="100" y="71" text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-size="44" font-weight="bold" font-style="italic"
-        fill="url(#numGold)" letter-spacing="-1">${pts}</text>
-    </svg>`;
+    const fs = pts >= 100 ? '2.5rem' : '3rem';
+    return `
+      <div class="rd-badge-wrap">
+        <img class="rd-badge-img" src="./assets/badge-rd.jpg" alt="El Sommelier RD"/>
+        <div class="rd-badge-num" style="font-size:${fs}">${pts}</div>
+      </div>`;
   }
 
   // Calcula puntuación RD automáticamente si no hay valor manual

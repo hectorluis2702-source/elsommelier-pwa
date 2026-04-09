@@ -1960,7 +1960,8 @@
   function calcularPuntuacionRD(puntuacion, fuente) {
     if (!puntuacion) return null;
     const esParker = fuente && (fuente.toLowerCase().includes('parker') || fuente.toLowerCase().includes('advocate'));
-    return esParker ? Math.max(85, puntuacion - 1) : Math.min(100, puntuacion + 1);
+    const resultado = esParker ? Math.max(85, puntuacion - 1) : puntuacion + 1;
+    return Math.min(100, resultado); // El Sommelier RD nunca supera 100
   }
 
   function abrirVino(idx) {
@@ -1975,7 +1976,7 @@
     const color = COLORES_VINO[tipo] || '#722F37';
     const puntuacion = v.rating?.promedio;
     const fuente = v.rating?.fuente;
-    const puntuacionRD = v.puntuacion_rd || calcularPuntuacionRD(puntuacion, fuente);
+    const puntuacionRD = Math.min(100, v.puntuacion_rd || calcularPuntuacionRD(puntuacion, fuente) || 0) || null;
 
     const chips = [
       v.tipo ? v.tipo.charAt(0).toUpperCase() + v.tipo.slice(1) : null,

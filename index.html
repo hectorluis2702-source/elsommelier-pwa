@@ -1878,81 +1878,30 @@
   let vinosActuales = [];
 
   // Badge SVG de El Sommelier RD — medallón burgundy/dorado con puntuación dinámica
+  // Badge usando el icono oficial de El Sommelier RD — sólo el número cambia
   function rdBadgeSVG(pts) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 210" width="150" height="158">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 138" width="200" height="138">
       <defs>
-        <radialGradient id="bgGrad" cx="45%" cy="35%" r="65%">
-          <stop offset="0%" style="stop-color:#9B1C2E"/>
-          <stop offset="60%" style="stop-color:#6B0F1E"/>
-          <stop offset="100%" style="stop-color:#3D0510"/>
+        <radialGradient id="numBg" cx="50%" cy="50%" r="60%">
+          <stop offset="0%"  style="stop-color:#9B1C2E"/>
+          <stop offset="60%" style="stop-color:#7A1020"/>
+          <stop offset="100%" style="stop-color:#5C0E18"/>
         </radialGradient>
-        <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"   style="stop-color:#F5E170"/>
-          <stop offset="25%"  style="stop-color:#C8960C"/>
-          <stop offset="50%"  style="stop-color:#F0C840"/>
-          <stop offset="75%"  style="stop-color:#A07010"/>
-          <stop offset="100%" style="stop-color:#E8C040"/>
-        </linearGradient>
-        <linearGradient id="goldRing2" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   style="stop-color:#E0B820"/>
-          <stop offset="50%"  style="stop-color:#B08010"/>
-          <stop offset="100%" style="stop-color:#D4A020"/>
-        </linearGradient>
         <linearGradient id="numGold" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%"   style="stop-color:#FAF0A0"/>
-          <stop offset="50%"  style="stop-color:#E8C840"/>
+          <stop offset="40%"  style="stop-color:#E8C840"/>
           <stop offset="100%" style="stop-color:#B08010"/>
         </linearGradient>
-        <filter id="shadow">
-          <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.5"/>
-        </filter>
-        <filter id="shine">
-          <feGaussianBlur stdDeviation="2" result="blur"/>
-          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-        </filter>
       </defs>
-      <!-- Drop shadow -->
-      <circle cx="100" cy="106" r="88" fill="rgba(0,0,0,0.4)"/>
-      <!-- White outer ring -->
-      <circle cx="100" cy="102" r="88" fill="white" filter="url(#shadow)"/>
-      <!-- Outer gold ring -->
-      <circle cx="100" cy="102" r="88" fill="url(#goldRing)"/>
-      <!-- Inner gold ring (darker) -->
-      <circle cx="100" cy="102" r="76" fill="url(#goldRing2)"/>
-      <!-- Burgundy fill -->
-      <circle cx="100" cy="102" r="70" fill="url(#bgGrad)"/>
-      <!-- Gloss shine -->
-      <ellipse cx="82" cy="72" rx="28" ry="18" fill="rgba(255,255,255,0.12)"/>
-      <!-- Score number -->
-      <text x="100" y="112" text-anchor="middle"
+      <!-- Icono oficial El Sommelier RD -->
+      <image href="./assets/badge-rd.png" x="0" y="0" width="200" height="138"/>
+      <!-- Cubre el número "95" original -->
+      <rect x="52" y="37" width="96" height="42" rx="4" fill="url(#numBg)"/>
+      <!-- Número real dinámico -->
+      <text x="100" y="71" text-anchor="middle"
         font-family="Georgia, 'Times New Roman', serif"
-        font-size="56" font-weight="bold" font-style="italic"
+        font-size="44" font-weight="bold" font-style="italic"
         fill="url(#numGold)" letter-spacing="-1">${pts}</text>
-      <!-- pts label -->
-      <text x="100" y="132" text-anchor="middle"
-        font-family="Georgia, serif" font-size="13" letter-spacing="3"
-        fill="#D4A843" text-decoration="none">pts</text>
-      <!-- El Sommelier RD -->
-      <text x="100" y="152" text-anchor="middle"
-        font-family="Georgia, serif" font-style="italic" font-size="10.5"
-        fill="#D4A843">El Sommelier RD</text>
-      <!-- Grape cluster icon -->
-      <g transform="translate(82, 158) scale(0.9)">
-        <line x1="18" y1="0" x2="18" y2="5" stroke="#C8960C" stroke-width="1.8"/>
-        <path d="M14,3 Q18,1 22,3" stroke="#C8960C" stroke-width="1.5" fill="none"/>
-        <circle cx="14" cy="10" r="4.2" fill="#8B1A2A" opacity="0.85"/>
-        <circle cx="22" cy="10" r="4.2" fill="#8B1A2A" opacity="0.85"/>
-        <circle cx="10" cy="18" r="4.2" fill="#7A1020" opacity="0.85"/>
-        <circle cx="18" cy="18" r="4.2" fill="#7A1020" opacity="0.85"/>
-        <circle cx="26" cy="18" r="4.2" fill="#7A1020" opacity="0.85"/>
-        <circle cx="14" cy="26" r="4.2" fill="#680E1C" opacity="0.85"/>
-        <circle cx="22" cy="26" r="4.2" fill="#680E1C" opacity="0.85"/>
-        <circle cx="18" cy="34" r="4.2" fill="#560C18" opacity="0.85"/>
-        <!-- Highlight dots -->
-        <circle cx="13" cy="8.5" r="1.2" fill="rgba(255,255,255,0.3)"/>
-        <circle cx="21" cy="8.5" r="1.2" fill="rgba(255,255,255,0.3)"/>
-        <circle cx="17" cy="16.5" r="1.2" fill="rgba(255,255,255,0.3)"/>
-      </g>
     </svg>`;
   }
 

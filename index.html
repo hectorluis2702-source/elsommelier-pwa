@@ -1731,7 +1731,11 @@
     if (!cataImageData) { showToast('Sube una imagen primero'); return; }
 
     const result = document.getElementById('cata-result');
-    result.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><span>El Maestro analiza la etiqueta...</span></div>';
+    result.innerHTML = `
+      <div class="leccion-loading">
+        <div class="spinner"></div>
+        <span>El Maestro analiza la etiqueta...</span>
+      </div>`;
 
     try {
       const res = await fetch(`${API_BASE}/api/scanner/analizar`, {
@@ -1741,26 +1745,74 @@
       });
       const data = await res.json();
 
-      if (data.analisis) {
+      if (!data.success || !data.datos) {
         result.innerHTML = `
-          <div class="card" style="border-left: 3px solid var(--gold);">
-            <div class="card-label">Analisis del Maestro</div>
-            <div class="card-body">${data.analisis.replace(/\n/g, '<br>')}</div>
-          </div>
-        `;
-        if (data.maridajes) {
-          result.innerHTML += `
-            <div class="consejo-maestro">
-              <div class="label">&#10070; Maridajes sugeridos</div>
-              <p>${data.maridajes}</p>
-            </div>
-          `;
-        }
-      } else {
-        result.innerHTML = `<div class="card"><div class="card-body">El Maestro no pudo analizar la etiqueta. Intenta con otra foto mas clara.</div></div>`;
+          <div class="card" style="border-left:3px solid #c0392b">
+            <div class="card-label" style="color:#e07070">Error del Maestro</div>
+            <div class="card-body">${data.error || 'No se pudo analizar la etiqueta. Intenta con una foto mas clara y bien iluminada.'}</div>
+          </div>`;
+        return;
       }
-    } catch {
-      result.innerHTML = `<div class="card"><div class="card-body" style="color:var(--text-dim)">Error de conexion con Cata Lab. Verifica el backend.</div></div>`;
+
+      const d = data.datos;
+      const chips = [d.tipo, d.pais, d.region, d.denominacion_origen, d.cosecha ? `Cosecha ${d.cosecha}` : null, d.graduacion_alcoholica]
+        .filter(Boolean)
+        .map(c => `<span class="vino-detail-chip">${c}</span>`).join('');
+
+      const uvas = Array.isArray(d.uvas) && d.uvas.length
+        ? `<div class="vino-seccion-titulo">Uvas</div>
+           <div style="margin-bottom:0.5rem">${d.uvas.map(u => `<span class="vino-maridaje-tag">${u}</span>`).join('')}</div>`
+        : '';
+
+      const notaCata = d.nota_cata
+        ? `<div class="vino-seccion-titulo">Nota de Cata</div>
+           <div class="vino-nota-cata">${d.nota_cata}</div>`
+        : '';
+
+      const maridaje = d.maridaje
+        ? `<div class="vino-seccion-titulo">Maridaje recomendado</div>
+           <div class="vino-nota-cata">${d.maridaje}</div>`
+        : '';
+
+      const precio = d.precio_estimado_usd
+        ? `<div class="vino-seccion-titulo">Precio estimado</div>
+           <div class="vino-nota-cata" style="font-size:1.1rem">${d.precio_estimado_usd}</div>`
+        : '';
+
+      const confianza = d.confianza
+        ? `<div style="font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--text-dim);margin-top:1rem;text-align:right">
+             Confianza: ${Math.round(d.confianza * 100)}%
+           </div>`
+        : '';
+
+      result.innerHTML = `
+        <div style="border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:var(--radius);overflow:hidden;margin-top:0.5rem">
+          <div style="background:var(--bg-card);padding:1.2rem">
+            <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.14em;color:var(--gold);text-transform:uppercase;margin-bottom:0.5rem">✦ Análisis del Maestro</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--cream);line-height:1.2;margin-bottom:0.2rem">${d.nombre || 'Vino sin identificar'}</div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem">${d.bodega || ''}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem">${chips}</div>
+            ${uvas}
+            ${d.descripcion ? `<div class="vino-seccion-titulo">Descripción</div><div class="vino-nota-cata">${d.descripcion}</div>` : ''}
+            ${notaCata}
+            ${maridaje}
+            ${precio}
+            ${confianza}
+          </div>
+          <div style="padding:1rem;border-top:1px solid var(--border)">
+            <button class="vino-bodega-btn" onclick="addToBodega('${(d.nombre||'').replace(/'/g,"\\'")}')">
+              + Agregar a mi bodega
+            </button>
+          </div>
+        </div>`;
+
+    } catch(e) {
+      result.innerHTML = `
+        <div class="card">
+          <div class="card-body" style="color:var(--text-dim)">
+            Error de conexion con Cata Lab. Verifica tu red e intenta de nuevo.
+          </div>
+        </div>`;
     }
   }
 

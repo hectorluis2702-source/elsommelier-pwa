@@ -1110,6 +1110,41 @@
       background: transparent;
       border: 1px solid var(--border); color: var(--text-dim);
     }
+    /* ── PUNTUACIONES DUAL ── */
+    .puntuaciones-grid {
+      display: flex; align-items: center; gap: 1.5rem;
+      background: rgba(184,134,11,0.04);
+      border: 1px solid rgba(184,134,11,0.15);
+      border-radius: var(--radius); padding: 1.2rem 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .puntuacion-rd-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .puntuacion-rd-label {
+      font-family: 'DM Mono', monospace; font-size: 0.5rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); text-align: center;
+    }
+    .puntuacion-ext-wrap {
+      display: flex; flex-direction: column; align-items: flex-start;
+      border-left: 1px solid rgba(184,134,11,0.2); padding-left: 1.2rem;
+      flex: 1;
+    }
+    .puntuacion-ext-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem; color: var(--cream-dim); line-height: 1;
+    }
+    .puntuacion-ext-fuente {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); margin-top: 0.3rem;
+    }
+    .puntuacion-ext-pts {
+      font-family: 'DM Mono', monospace; font-size: 0.55rem;
+      color: var(--text-dim); margin-top: 0.1rem;
+    }
 
     /* ── TOAST ── */
     .toast {
@@ -1842,6 +1877,92 @@
   // ─── VISOR DE VINO ───
   let vinosActuales = [];
 
+  // Badge SVG de El Sommelier RD — medallón burgundy/dorado con puntuación dinámica
+  function rdBadgeSVG(pts) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 210" width="150" height="158">
+      <defs>
+        <radialGradient id="bgGrad" cx="45%" cy="35%" r="65%">
+          <stop offset="0%" style="stop-color:#9B1C2E"/>
+          <stop offset="60%" style="stop-color:#6B0F1E"/>
+          <stop offset="100%" style="stop-color:#3D0510"/>
+        </radialGradient>
+        <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   style="stop-color:#F5E170"/>
+          <stop offset="25%"  style="stop-color:#C8960C"/>
+          <stop offset="50%"  style="stop-color:#F0C840"/>
+          <stop offset="75%"  style="stop-color:#A07010"/>
+          <stop offset="100%" style="stop-color:#E8C040"/>
+        </linearGradient>
+        <linearGradient id="goldRing2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   style="stop-color:#E0B820"/>
+          <stop offset="50%"  style="stop-color:#B08010"/>
+          <stop offset="100%" style="stop-color:#D4A020"/>
+        </linearGradient>
+        <linearGradient id="numGold" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   style="stop-color:#FAF0A0"/>
+          <stop offset="50%"  style="stop-color:#E8C840"/>
+          <stop offset="100%" style="stop-color:#B08010"/>
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.5"/>
+        </filter>
+        <filter id="shine">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+      </defs>
+      <!-- Drop shadow -->
+      <circle cx="100" cy="106" r="88" fill="rgba(0,0,0,0.4)"/>
+      <!-- White outer ring -->
+      <circle cx="100" cy="102" r="88" fill="white" filter="url(#shadow)"/>
+      <!-- Outer gold ring -->
+      <circle cx="100" cy="102" r="88" fill="url(#goldRing)"/>
+      <!-- Inner gold ring (darker) -->
+      <circle cx="100" cy="102" r="76" fill="url(#goldRing2)"/>
+      <!-- Burgundy fill -->
+      <circle cx="100" cy="102" r="70" fill="url(#bgGrad)"/>
+      <!-- Gloss shine -->
+      <ellipse cx="82" cy="72" rx="28" ry="18" fill="rgba(255,255,255,0.12)"/>
+      <!-- Score number -->
+      <text x="100" y="112" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="56" font-weight="bold" font-style="italic"
+        fill="url(#numGold)" letter-spacing="-1">${pts}</text>
+      <!-- pts label -->
+      <text x="100" y="132" text-anchor="middle"
+        font-family="Georgia, serif" font-size="13" letter-spacing="3"
+        fill="#D4A843" text-decoration="none">pts</text>
+      <!-- El Sommelier RD -->
+      <text x="100" y="152" text-anchor="middle"
+        font-family="Georgia, serif" font-style="italic" font-size="10.5"
+        fill="#D4A843">El Sommelier RD</text>
+      <!-- Grape cluster icon -->
+      <g transform="translate(82, 158) scale(0.9)">
+        <line x1="18" y1="0" x2="18" y2="5" stroke="#C8960C" stroke-width="1.8"/>
+        <path d="M14,3 Q18,1 22,3" stroke="#C8960C" stroke-width="1.5" fill="none"/>
+        <circle cx="14" cy="10" r="4.2" fill="#8B1A2A" opacity="0.85"/>
+        <circle cx="22" cy="10" r="4.2" fill="#8B1A2A" opacity="0.85"/>
+        <circle cx="10" cy="18" r="4.2" fill="#7A1020" opacity="0.85"/>
+        <circle cx="18" cy="18" r="4.2" fill="#7A1020" opacity="0.85"/>
+        <circle cx="26" cy="18" r="4.2" fill="#7A1020" opacity="0.85"/>
+        <circle cx="14" cy="26" r="4.2" fill="#680E1C" opacity="0.85"/>
+        <circle cx="22" cy="26" r="4.2" fill="#680E1C" opacity="0.85"/>
+        <circle cx="18" cy="34" r="4.2" fill="#560C18" opacity="0.85"/>
+        <!-- Highlight dots -->
+        <circle cx="13" cy="8.5" r="1.2" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="21" cy="8.5" r="1.2" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="17" cy="16.5" r="1.2" fill="rgba(255,255,255,0.3)"/>
+      </g>
+    </svg>`;
+  }
+
+  // Calcula puntuación RD automáticamente si no hay valor manual
+  function calcularPuntuacionRD(puntuacion, fuente) {
+    if (!puntuacion) return null;
+    const esParker = fuente && (fuente.toLowerCase().includes('parker') || fuente.toLowerCase().includes('advocate'));
+    return esParker ? Math.max(85, puntuacion - 1) : Math.min(100, puntuacion + 1);
+  }
+
   function abrirVino(idx) {
     const v = vinosActuales[idx];
     if (!v) return;
@@ -1852,7 +1973,10 @@
 
     const tipo = (v.tipo || '').toLowerCase();
     const color = COLORES_VINO[tipo] || '#722F37';
-    const rating = v.rating?.promedio;
+    const puntuacion = v.rating?.promedio;
+    const fuente = v.rating?.fuente;
+    const puntuacionRD = v.puntuacion_rd || calcularPuntuacionRD(puntuacion, fuente);
+
     const chips = [
       v.tipo ? v.tipo.charAt(0).toUpperCase() + v.tipo.slice(1) : null,
       v.pais,
@@ -1861,9 +1985,8 @@
       v.varietal
     ].filter(Boolean);
 
-    const bodega = JSON.parse(localStorage.getItem('mi_bodega') || '[]');
-    const yaEsta = bodega.includes(v.nombre);
-
+    const bodegaLocal = JSON.parse(localStorage.getItem('mi_bodega') || '[]');
+    const yaEsta = bodegaLocal.includes(v.nombre);
     const maridajesArr = Array.isArray(v.maridajes) ? v.maridajes : (v.maridajes ? [v.maridajes] : []);
 
     document.getElementById('vino-overlay-body').innerHTML = `
@@ -1878,11 +2001,22 @@
           ${chips.map(c => `<span class="vino-detail-chip">${c}</span>`).join('')}
         </div>
 
-        ${rating ? `
-          <div class="vino-seccion-titulo">Puntuación</div>
-          <div class="vino-rating-big">
-            <span class="vino-rating-num">${rating}</span>
-            <span class="vino-rating-stars">★</span>
+        ${(puntuacionRD || puntuacion) ? `
+          <div class="vino-seccion-titulo">Puntuaciones</div>
+          <div class="puntuaciones-grid">
+            ${puntuacionRD ? `
+              <div class="puntuacion-rd-wrap">
+                ${rdBadgeSVG(puntuacionRD)}
+                <div class="puntuacion-rd-label">Puntuación Oficial</div>
+              </div>
+            ` : ''}
+            ${puntuacion ? `
+              <div class="puntuacion-ext-wrap">
+                <div class="puntuacion-ext-num">${puntuacion}</div>
+                <div class="puntuacion-ext-fuente">${fuente || 'Puntuación Internacional'}</div>
+                <div class="puntuacion-ext-pts">/ 100 pts</div>
+              </div>
+            ` : ''}
           </div>
         ` : ''}
 

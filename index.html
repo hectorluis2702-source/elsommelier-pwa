@@ -842,6 +842,7 @@
     .nivel-badge.bronce { background: rgba(184,134,11,0.12); border: 1px solid rgba(184,134,11,0.3); color: #cd7f32; }
     .nivel-badge.plata { background: rgba(192,192,192,0.1); border: 1px solid rgba(192,192,192,0.3); color: #c0c0c0; }
     .nivel-badge.oro { background: rgba(184,134,11,0.15); border: 1px solid rgba(184,134,11,0.4); color: var(--gold); }
+    .nivel-badge.diplomado { background: rgba(98,0,2,0.2); border: 1px solid rgba(232,200,64,0.5); color: #E8C840; }
 
     .leccion-card {
       background: var(--bg-card);
@@ -854,6 +855,15 @@
       transition: all 0.25s ease;
     }
     .leccion-card:hover { border-color: var(--border-hover); }
+    .leccion-card.diplomado-card {
+      border-color: rgba(232,200,64,0.2);
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(98,0,2,0.08) 100%);
+    }
+    .leccion-card.diplomado-card:hover { border-color: rgba(232,200,64,0.5); }
+    .leccion-card.diplomado-card .leccion-num {
+      border-color: rgba(232,200,64,0.4);
+      color: #E8C840;
+    }
     .leccion-num {
       width: 36px; height: 36px;
       border: 1px solid var(--border);
@@ -892,6 +902,14 @@
       margin-top: 0.5rem;
     }
     .modulo-header:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+    .modulo-header-diplomado {
+      color: #E8C840;
+      border-top: 1px solid rgba(232,200,64,0.4);
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+    }
 
     /* ── VISOR DE LECCIÓN ── */
     .leccion-overlay {
@@ -2178,19 +2196,32 @@
   }
 
   function renderLecciones(lecciones) {
-    const nivelLabel = { bronce: 'MÓDULO BRONCE — FUNDAMENTOS', plata: 'MÓDULO PLATA — INTERMEDIO', oro: 'MÓDULO ORO — AVANZADO' };
+    const nivelLabel = {
+      bronce:    '🥉 MÓDULO BRONCE — FUNDAMENTOS',
+      plata:     '🥈 MÓDULO PLATA — INTERMEDIO',
+      oro:       '🥇 MÓDULO ORO — AVANZADO',
+      diplomado: '🎓 DIPLOMADO SOMMELIER PROFESIONAL'
+    };
+    const nivelOrden = { bronce: 1, plata: 2, oro: 3, diplomado: 4 };
+    lecciones.sort((a, b) => {
+      const no = (nivelOrden[a.nivel] || 9) - (nivelOrden[b.nivel] || 9);
+      if (no !== 0) return no;
+      return (a.orden || 0) - (b.orden || 0);
+    });
     let html = '';
     let nivelActual = null;
     lecciones.forEach((l, i) => {
       if (l.nivel !== nivelActual) {
         nivelActual = l.nivel;
-        html += `<div class="modulo-header">${nivelLabel[l.nivel] || l.nivel.toUpperCase()}</div>`;
+        const isDiplomado = l.nivel === 'diplomado';
+        html += `<div class="modulo-header${isDiplomado ? ' modulo-header-diplomado' : ''}">${nivelLabel[l.nivel] || l.nivel.toUpperCase()}</div>`;
       }
       const num = String(l.orden || i + 1).padStart(2, '0');
       const dur = l.duracion_estimada ? `${l.duracion_estimada} min` : '';
       const slugSafe = (l.slug || '').replace(/'/g, "\\'");
+      const diploClass = l.nivel === 'diplomado' ? ' diplomado-card' : '';
       html += `
-        <div class="leccion-card" onclick="abrirLeccion('${slugSafe}', '${l.titulo.replace(/'/g, "\\'")}', '${dur}')">
+        <div class="leccion-card${diploClass}" onclick="abrirLeccion('${slugSafe}', '${l.titulo.replace(/'/g, "\\'")}', '${dur}')">
           <div class="leccion-num">${num}</div>
           <div>
             <div class="leccion-titulo">${l.titulo}</div>

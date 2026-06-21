@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#000000"/>
+  <meta name="description" content="El Sommelier RD — Cursos gratuitos de vino y sommelier"/>
+  <title>Cursos — El Sommelier RD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    :root {
+      --gold: #B8860B;
+      --gold-bright: #E8C840;
+      --text-dim: #777;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+      opacity: 0.18;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: #000;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 0.75rem 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-logo { display: flex; align-items: center; gap: 0; }
+    .logo-sommelier {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 400;
+      color: #fff; letter-spacing: 0.01em;
+    }
+    .logo-sep {
+      width: 1px; height: 16px;
+      background: rgba(255,255,255,0.25);
+      margin: 0 0.45rem;
+    }
+    .logo-rd {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem; color: var(--gold);
+      letter-spacing: 0.1em;
+    }
+    .header-right { display: flex; align-items: center; gap: 0.65rem; }
+    .btn-acceso {
+      padding: 0.28rem 0.9rem;
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 3px;
+      background: transparent; color: #fff;
+      font-size: 0.75rem; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.18s;
+    }
+    .btn-acceso:hover { background: #fff; color: #000; }
+    .btn-hamburger {
+      background: none; border: none; cursor: pointer;
+      display: flex; flex-direction: column; gap: 4px; padding: 4px;
+    }
+    .btn-hamburger span { display: block; width: 22px; height: 1.5px; background: #fff; }
+
+    /* ── NAV OVERLAY ── */
+    .nav-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: #000;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column;
+    }
+    .nav-overlay.open { transform: translateX(0); }
+    .nav-overlay-top {
+      display: flex; justify-content: flex-end;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #0a0a0a;
+    }
+    .nav-close {
+      background: none; border: none; color: #fff;
+      font-size: 1.5rem; cursor: pointer; line-height: 1;
+    }
+    .nav-links { flex: 1; }
+    .nav-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.95rem 1.2rem;
+      font-size: 1rem; color: #fff;
+      border-bottom: 1px solid #080808;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.15s;
+    }
+    .nav-item:hover { background: #0a0a0a; }
+    .nav-item.current { color: var(--text-dim); }
+    .nav-chevron { color: #444; }
+    .nav-search {
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.95rem 1.2rem;
+      color: #666; font-size: 0.9rem;
+      border-bottom: 1px solid #080808;
+      cursor: pointer;
+    }
+    .nav-lang-section {
+      padding: 1.2rem 1.2rem 2.5rem;
+      border-top: 1px solid #0d0d0d;
+    }
+    .nav-lang-label { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.55rem; }
+    .lang-toggle { display: flex; }
+    .lang-btn {
+      padding: 0.28rem 0.8rem;
+      background: #1a1a1a; color: #aaa;
+      border: none; cursor: pointer;
+      font-size: 0.7rem; font-family: 'DM Mono', monospace;
+    }
+    .lang-btn.active { background: #fff; color: #000; font-weight: 500; }
+
+    /* ── FILTER PANEL ── */
+    .filter-panel {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: #060606;
+    }
+    .filter-panel.open { max-height: 120px; }
+    .filter-inner { padding: 0.75rem 1rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .fchip {
+      padding: 0.28rem 0.75rem;
+      border: 1px solid #252525; border-radius: 20px;
+      font-size: 0.68rem; color: #777;
+      cursor: pointer; background: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.18s;
+    }
+    .fchip:hover, .fchip.on {
+      border-color: var(--gold); color: var(--gold);
+      background: rgba(184,134,11,0.07);
+    }
+
+    /* ── PAGE TITLE ── */
+    .page-title-bar {
+      padding: 1.4rem 1rem 0;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem;
+    }
+    .page-h1 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(1.65rem, 7.5vw, 2.2rem);
+      font-weight: 700; color: #fff; line-height: 1.12;
+    }
+    .btn-filtros {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: none; border: none; color: #fff;
+      cursor: pointer; font-size: 0.78rem;
+      font-family: 'DM Sans', sans-serif;
+      padding: 0; white-space: nowrap;
+      margin-top: 0.5rem; flex-shrink: 0;
+    }
+
+    /* ── SHOW BAR ── */
+    .show-bar {
+      padding: 0.6rem 1rem 0.85rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .show-label { font-size: 0.78rem; color: #888; }
+    .show-select {
+      appearance: none; -webkit-appearance: none;
+      background: transparent; border: 1px solid #333;
+      color: #fff; padding: 0.18rem 1.5rem 0.18rem 0.5rem;
+      font-size: 0.78rem; border-radius: 2px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.4rem center;
+    }
+    .show-select option { background: #000; }
+
+    /* ── MODULE DIVIDER ── */
+    .modulo-div {
+      padding: 0.45rem 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.52rem; letter-spacing: 0.16em;
+      color: var(--gold); text-transform: uppercase;
+      background: #000; border-bottom: 1px solid #0c0c0c;
+      margin-top: 0.75rem;
+    }
+    .modulo-div:first-child { margin-top: 0; }
+
+    /* ── COURSE CARD ── */
+    .course-card {
+      display: block; border-bottom: 1px solid #0d0d0d;
+      cursor: pointer; transition: filter 0.2s;
+    }
+    .course-card:hover { filter: brightness(1.08); }
+
+    /* Image zone */
+    .cimg {
+      position: relative; height: 195px; overflow: hidden;
+    }
+    .cimg-bg {
+      width: 100%; height: 100%; position: relative;
+    }
+    /* Landscape silhouette at bottom */
+    .cimg-land {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 55%;
+    }
+    /* Atmosphere glow */
+    .cimg-glow {
+      position: absolute; inset: 0;
+    }
+    /* Brand overlay */
+    .cbrand {
+      position: absolute; bottom: 0; left: 0;
+      display: flex; align-items: stretch;
+    }
+    .cbrand-logo {
+      background: #000; padding: 0.3rem 0.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600; font-style: italic;
+      font-size: 1.25rem; color: var(--gold-bright);
+      line-height: 1; display: flex; align-items: center;
+    }
+    .cbrand-name {
+      padding: 0.3rem 0.65rem;
+      background: rgba(0,0,0,0.62);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.05rem;
+      color: #fff; line-height: 1;
+      display: flex; align-items: center;
+    }
+
+    /* Info zone */
+    .cinfo {
+      padding: 0.75rem 1rem 1.05rem;
+      background: #000;
+    }
+    .clevel {
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.68rem; color: var(--text-dim);
+      margin-bottom: 0.35rem; font-family: 'DM Sans', sans-serif;
+    }
+    .ctitle {
+      font-size: 0.97rem; font-weight: 600;
+      color: #fff; margin-bottom: 0.5rem; line-height: 1.3;
+    }
+    .cstars { display: flex; gap: 2px; }
+    .cstars .s { font-size: 1rem; }
+    .cstars .s.on { color: var(--gold); }
+    .cstars .s.off { color: #1e1e1e; }
+
+    /* ── NO RESULTS ── */
+    #no-results {
+      display: none; padding: 3.5rem 1.5rem;
+      text-align: center; color: #444;
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV OVERLAY -->
+<div class="nav-overlay" id="navOverlay">
+  <div class="nav-overlay-top">
+    <button class="nav-close" onclick="closeNav()">&#10005;</button>
+  </div>
+  <div class="nav-links">
+    <a class="nav-item" href="index.html">Inicio</a>
+    <a class="nav-item current" href="#">Cursos</a>
+    <a class="nav-item" href="index.html">El Maestro AI</a>
+    <a class="nav-item" href="index.html">
+      Mapa de Vinos <span class="nav-chevron">&#8250;</span>
+    </a>
+    <a class="nav-item" href="index.html">
+      Ayuda <span class="nav-chevron">&#8250;</span>
+    </a>
+    <div class="nav-search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      Buscar
+    </div>
+  </div>
+  <div class="nav-lang-section">
+    <div class="nav-lang-label">Idioma</div>
+    <div class="lang-toggle">
+      <button class="lang-btn active">ES</button>
+      <button class="lang-btn">EN</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-logo">
+    <span class="logo-sommelier">El Sommelier</span>
+    <div class="logo-sep"></div>
+    <span class="logo-rd">RD</span>
+  </div>
+  <div class="header-right">
+    <button class="btn-acceso" onclick="window.location.href='index.html'">Acceso</button>
+    <button class="btn-hamburger" onclick="openNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- FILTER PANEL -->
+<div class="filter-panel" id="filterPanel">
+  <div class="filter-inner">
+    <button class="fchip on" onclick="setFilter(this,'todos')">Todos</button>
+    <button class="fchip" onclick="setFilter(this,'bronce')">🥉 Nivel 1</button>
+    <button class="fchip" onclick="setFilter(this,'plata')">🥈 Nivel 2</button>
+    <button class="fchip" onclick="setFilter(this,'oro')">🥇 Nivel 3</button>
+    <button class="fchip" onclick="setFilter(this,'diplomado')">🎓 Diplomado</button>
+  </div>
+</div>
+
+<!-- PAGE TITLE -->
+<div class="page-title-bar">
+  <h1 class="page-h1">Cursos gratuitos de<br>El Sommelier RD</h1>
+  <button class="btn-filtros" onclick="toggleFilter()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="6" y1="12" x2="18" y2="12"/>
+      <line x1="9" y1="18" x2="15" y2="18"/>
+    </svg>
+    Filtros
+  </button>
+</div>
+
+<!-- SHOW N -->
+<div class="show-bar">
+  <span class="show-label">Mostrar:</span>
+  <select class="show-select" id="showSelect" onchange="render()">
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="30" selected>30</option>
+    <option value="9999">Todos</option>
+  </select>
+</div>
+
+<!-- COURSES -->
+<div id="coursesWrap"></div>
+<div id="no-results">No se encontraron cursos.</div>
+
+<script>
+const COURSES = [
+  // ── NIVEL 1 · BRONCE ──
+  {
+    nivel:'bronce', lbl:'Nivel 1',
+    titulo:'Tasting Essentials — Elementos Esenciales de la Degustación',
+    brand:'Tasting Essentials', stars:5,
+    bg:'linear-gradient(155deg,#2c0808 0%,#680016 50%,#1a0404 100%)',
+    land:'polygon(0 55%,8% 38%,18% 50%,28% 30%,40% 45%,52% 25%,65% 40%,78% 22%,90% 36%,100% 20%,100% 100%,0 100%)',
+    landC:'rgba(80,0,16,0.55)',
+    glow:'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(180,0,40,0.18) 0%, transparent 70%)'
+  },
+  {
+    nivel:'bronce', lbl:'Nivel 1',
+    titulo:'Enthusiast — Entusiasta del Vino Dominicano',
+    brand:'Enthusiast', stars:4,
+    bg:'linear-gradient(155deg,#0c1c0c 0%,#1a3418 50%,#0a1208 100%)',
+    land:'polygon(0 60%,10% 45%,22% 58%,35% 35%,48% 52%,60% 32%,72% 48%,85% 28%,100% 42%,100% 100%,0 100%)',
+    landC:'rgba(10,40,10,0.6)',
+    glow:'radial-gradient(ellipse 60% 40% at 50% 25%, rgba(30,100,20,0.15) 0%, transparent 70%)'
+  },
+  {
+    nivel:'bronce', lbl:'Nivel 1',
+    titulo:'Viticultura y el Terroir — Del Viñedo a la Copa',
+    brand:'Viticultura', stars:4,
+    bg:'linear-gradient(155deg,#1c1005 0%,#2e1e08 50%,#100a03 100%)',
+    land:'polygon(0 50%,12% 35%,25% 50%,38% 28%,50% 44%,63% 24%,76% 40%,88% 20%,100% 35%,100% 100%,0 100%)',
+    landC:'rgba(60,35,5,0.55)',
+    glow:'radial-gradient(ellipse 65% 45% at 50% 30%, rgba(120,80,10,0.14) 0%, transparent 70%)'
+  },
+  {
+    nivel:'bronce', lbl:'Nivel 1',
+    titulo:'Las Uvas Nobles del Mundo',
+    brand:'Uvas Nobles', stars:4,
+    bg:'linear-gradient(155deg,#1c0a22 0%,#301248 50%,#100518 100%)',
+    land:'polygon(0 65%,7% 48%,16% 60%,26% 38%,38% 55%,50% 30%,62% 50%,74% 28%,86% 44%,100% 25%,100% 100%,0 100%)',
+    landC:'rgba(50,10,70,0.55)',
+    glow:'radial-gradient(ellipse 60% 45% at 50% 28%, rgba(100,20,160,0.12) 0%, transparent 70%)'
+  },
+  {
+    nivel:'bronce', lbl:'Nivel 1',
+    titulo:'Regiones Vinícolas del Mundo',
+    brand:'World Regions', stars:5,
+    bg:'linear-gradient(155deg,#08101c 0%,#102030 50%,#060c12 100%)',
+    land:'polygon(0 55%,5% 45%,15% 55%,28% 30%,42% 48%,56% 25%,68% 42%,80% 20%,92% 38%,100% 22%,100% 100%,0 100%)',
+    landC:'rgba(10,30,60,0.6)',
+    glow:'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(20,80,160,0.12) 0%, transparent 70%)'
+  },
+  {
+    nivel:'bronce', lbl:'Nivel 1',
+    titulo:'Servicio y Temperatura del Vino',
+    brand:'Service & Temp', stars:3,
+    bg:'linear-gradient(155deg,#0e0e0e 0%,#1e1e16 50%,#080808 100%)',
+    land:'polygon(0 60%,15% 45%,30% 58%,45% 40%,60% 55%,75% 35%,90% 50%,100% 38%,100% 100%,0 100%)',
+    landC:'rgba(40,40,20,0.5)',
+    glow:'radial-gradient(ellipse 55% 40% at 50% 35%, rgba(80,80,30,0.1) 0%, transparent 70%)'
+  },
+
+  // ── NIVEL 2 · PLATA ──
+  {
+    nivel:'plata', lbl:'Nivel 2',
+    titulo:'Análisis Sensorial Avanzado — La Rueda de Aromas',
+    brand:'Sensory Analysis', stars:4,
+    bg:'linear-gradient(155deg,#1c1400 0%,#302200 50%,#0e0a00 100%)',
+    land:'polygon(0 52%,10% 38%,22% 52%,35% 30%,48% 46%,60% 25%,73% 42%,86% 22%,100% 38%,100% 100%,0 100%)',
+    landC:'rgba(70,55,0,0.55)',
+    glow:'radial-gradient(ellipse 65% 45% at 50% 28%, rgba(180,140,0,0.1) 0%, transparent 70%)'
+  },
+  {
+    nivel:'plata', lbl:'Nivel 2',
+    titulo:'Gastronomía Dominicana y Vino — El Arte del Maridaje Caribeño',
+    brand:'Dom. Gastronomy', stars:5,
+    bg:'linear-gradient(155deg,#200a00 0%,#361600 50%,#120600 100%)',
+    land:'polygon(0 58%,8% 42%,20% 56%,33% 35%,46% 52%,59% 28%,72% 46%,85% 26%,100% 40%,100% 100%,0 100%)',
+    landC:'rgba(90,30,0,0.55)',
+    glow:'radial-gradient(ellipse 70% 50% at 50% 30%, rgba(200,60,0,0.12) 0%, transparent 70%)'
+  },
+  {
+    nivel:'plata', lbl:'Nivel 2',
+    titulo:'Burdeos y Borgoña — Las Cumbres del Vino Clásico',
+    brand:'Burdeos & Borgoña', stars:5,
+    bg:'linear-gradient(155deg,#200606 0%,#340a0a 50%,#120404 100%)',
+    land:'polygon(0 48%,8% 32%,18% 46%,30% 24%,43% 40%,56% 20%,68% 36%,80% 16%,92% 32%,100% 18%,100% 100%,0 100%)',
+    landC:'rgba(100,10,10,0.55)',
+    glow:'radial-gradient(ellipse 65% 45% at 50% 28%, rgba(200,0,20,0.12) 0%, transparent 70%)'
+  },
+  {
+    nivel:'plata', lbl:'Nivel 2',
+    titulo:'España y sus Grandes Regiones Vinícolas',
+    brand:'España', stars:4,
+    bg:'linear-gradient(155deg,#201000 0%,#341800 50%,#120800 100%)',
+    land:'polygon(0 55%,10% 40%,22% 54%,35% 32%,48% 50%,60% 28%,72% 46%,84% 24%,100% 38%,100% 100%,0 100%)',
+    landC:'rgba(90,40,0,0.55)',
+    glow:'radial-gradient(ellipse 60% 45% at 50% 30%, rgba(200,90,0,0.1) 0%, transparent 70%)'
+  },
+  {
+    nivel:'plata', lbl:'Nivel 2',
+    titulo:'Espumosos del Mundo — Champagne, Cava y Prosecco',
+    brand:'Espumosos', stars:4,
+    bg:'linear-gradient(155deg,#081014 0%,#101e24 50%,#06090e 100%)',
+    land:'polygon(0 62%,12% 48%,24% 62%,36% 42%,50% 58%,62% 36%,75% 52%,88% 30%,100% 46%,100% 100%,0 100%)',
+    landC:'rgba(10,50,70,0.55)',
+    glow:'radial-gradient(ellipse 60% 45% at 50% 30%, rgba(20,120,180,0.1) 0%, transparent 70%)'
+  },
+  {
+    nivel:'plata', lbl:'Nivel 2',
+    titulo:'Vinos Blancos del Mundo — Riesling, Chardonnay y Más',
+    brand:'Blancos', stars:3,
+    bg:'linear-gradient(155deg,#0e1612 0%,#1a2818 50%,#090e0a 100%)',
+    land:'polygon(0 60%,10% 45%,22% 58%,35% 40%,48% 54%,60% 35%,73% 50%,86% 32%,100% 46%,100% 100%,0 100%)',
+    landC:'rgba(20,60,30,0.55)',
+    glow:'radial-gradient(ellipse 55% 40% at 50% 30%, rgba(40,120,60,0.1) 0%, transparent 70%)'
+  },
+
+  // ── NIVEL 3 · ORO ──
+  {
+    nivel:'oro', lbl:'Nivel 3',
+    titulo:'Vinos del Nuevo Mundo — Argentina, Chile y California',
+    brand:'Nuevo Mundo', stars:4,
+    bg:'linear-gradient(155deg,#0c1800 0%,#182800 50%,#080e00 100%)',
+    land:'polygon(0 50%,8% 35%,18% 48%,30% 28%,43% 44%,56% 22%,70% 40%,82% 18%,94% 35%,100% 22%,100% 100%,0 100%)',
+    landC:'rgba(30,70,0,0.55)',
+    glow:'radial-gradient(ellipse 65% 45% at 50% 28%, rgba(60,160,0,0.1) 0%, transparent 70%)'
+  },
+  {
+    nivel:'oro', lbl:'Nivel 3',
+    titulo:'Degustación a Ciegas — El Máximo Desafío del Sommelier',
+    brand:'Blind Tasting', stars:5,
+    bg:'linear-gradient(155deg,#060606 0%,#0e0e0e 50%,#040404 100%)',
+    land:'polygon(0 45%,10% 30%,22% 44%,35% 20%,48% 38%,62% 16%,75% 34%,88% 14%,100% 30%,100% 100%,0 100%)',
+    landC:'rgba(20,20,20,0.7)',
+    glow:'radial-gradient(ellipse 55% 40% at 50% 28%, rgba(184,134,11,0.14) 0%, transparent 70%)'
+  },
+  {
+    nivel:'oro', lbl:'Nivel 3',
+    titulo:'Italianos de Alto Vuelo — Barolo, Brunello y Super Tuscans',
+    brand:'Italia', stars:5,
+    bg:'linear-gradient(155deg,#1e0808 0%,#301010 50%,#100505 100%)',
+    land:'polygon(0 52%,8% 36%,20% 50%,33% 28%,46% 44%,60% 22%,73% 40%,86% 18%,100% 34%,100% 100%,0 100%)',
+    landC:'rgba(80,15,15,0.55)',
+    glow:'radial-gradient(ellipse 60% 45% at 50% 28%, rgba(180,30,30,0.1) 0%, transparent 70%)'
+  },
+  {
+    nivel:'oro', lbl:'Nivel 3',
+    titulo:'Vinos Espirituosos — Ron Dominicano y Licores del Mundo',
+    brand:'Spirits', stars:4,
+    bg:'linear-gradient(155deg,#1a0a00 0%,#2c1400 50%,#0e0600 100%)',
+    land:'polygon(0 58%,10% 44%,22% 58%,34% 36%,46% 52%,58% 30%,70% 46%,82% 26%,94% 42%,100% 28%,100% 100%,0 100%)',
+    landC:'rgba(80,35,0,0.55)',
+    glow:'radial-gradient(ellipse 60% 45% at 50% 30%, rgba(180,80,0,0.1) 0%, transparent 70%)'
+  },
+
+  // ── DIPLOMADO ──
+  {
+    nivel:'diplomado', lbl:'Diplomado',
+    titulo:'Sommelier Profesional — Módulo I: Bases Técnicas y Cata Oficial',
+    brand:'Diplomado I', stars:5,
+    bg:'linear-gradient(155deg,#1e1400 0%,#342000 50%,#0e0a00 100%)',
+    land:'polygon(0 48%,6% 32%,16% 46%,28% 22%,40% 38%,54% 18%,66% 36%,80% 14%,92% 30%,100% 16%,100% 100%,0 100%)',
+    landC:'rgba(100,72,0,0.55)',
+    glow:'radial-gradient(ellipse 70% 50% at 50% 26%, rgba(232,200,64,0.14) 0%, transparent 70%)'
+  },
+  {
+    nivel:'diplomado', lbl:'Diplomado',
+    titulo:'Sommelier Profesional — Módulo II: Sala, Liderazgo y Bodega',
+    brand:'Diplomado II', stars:5,
+    bg:'linear-gradient(155deg,#140a1e 0%,#201230 50%,#0a0510 100%)',
+    land:'polygon(0 50%,8% 34%,18% 48%,30% 26%,44% 42%,58% 20%,72% 38%,86% 16%,100% 32%,100% 100%,0 100%)',
+    landC:'rgba(60,20,90,0.55)',
+    glow:'radial-gradient(ellipse 65% 45% at 50% 26%, rgba(200,160,50,0.12) 0%, transparent 70%)'
+  },
+  {
+    nivel:'diplomado', lbl:'Diplomado',
+    titulo:'Examen de Certificación — Sommelier El Sommelier RD',
+    brand:'Examen Final', stars:5,
+    bg:'linear-gradient(155deg,#280000 0%,#400000 50%,#140000 100%)',
+    land:'polygon(0 44%,8% 28%,18% 42%,30% 18%,44% 36%,58% 14%,72% 32%,86% 10%,100% 26%,100% 100%,0 100%)',
+    landC:'rgba(120,0,0,0.6)',
+    glow:'radial-gradient(ellipse 70% 50% at 50% 24%, rgba(232,200,64,0.16) 0%, transparent 70%)'
+  },
+];
+
+const MODULOS = {
+  bronce:   '🥉 Módulo Bronce — Fundamentos del Vino',
+  plata:    '🥈 Módulo Plata — Nivel Intermedio',
+  oro:      '🥇 Módulo Oro — Nivel Avanzado',
+  diplomado:'🎓 Diplomado Sommelier Profesional',
+};
+
+let activeFilter = 'todos';
+
+function stars(n) {
+  let s = '';
+  for (let i = 1; i <= 5; i++)
+    s += `<span class="s ${i <= n ? 'on' : 'off'}">★</span>`;
+  return `<div class="cstars">${s}</div>`;
+}
+
+function render() {
+  const wrap = document.getElementById('coursesWrap');
+  const noR  = document.getElementById('no-results');
+  const max  = parseInt(document.getElementById('showSelect').value);
+
+  const list = activeFilter === 'todos'
+    ? COURSES
+    : COURSES.filter(c => c.nivel === activeFilter);
+  const shown = list.slice(0, max);
+
+  if (!shown.length) {
+    wrap.innerHTML = '';
+    noR.style.display = 'block';
+    return;
+  }
+  noR.style.display = 'none';
+
+  let html = '';
+  let lastNivel = null;
+
+  shown.forEach(c => {
+    if (c.nivel !== lastNivel) {
+      html += `<div class="modulo-div">${MODULOS[c.nivel] || c.nivel}</div>`;
+      lastNivel = c.nivel;
+    }
+    html += `
+    <div class="course-card" onclick="goApp()">
+      <div class="cimg">
+        <div class="cimg-bg" style="background:${c.bg}">
+          <div class="cimg-glow" style="background:${c.glow}"></div>
+          <div class="cimg-land" style="background:${c.landC};clip-path:${c.land}"></div>
+        </div>
+        <div class="cbrand">
+          <div class="cbrand-logo">S</div>
+          <div class="cbrand-name">${c.brand}</div>
+        </div>
+      </div>
+      <div class="cinfo">
+        <div class="clevel">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.55">
+            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+          </svg>
+          ${c.lbl}
+        </div>
+        <div class="ctitle">${c.titulo}</div>
+        ${stars(c.stars)}
+      </div>
+    </div>`;
+  });
+
+  wrap.innerHTML = html;
+}
+
+function setFilter(btn, nivel) {
+  document.querySelectorAll('.fchip').forEach(c => c.classList.remove('on'));
+  btn.classList.add('on');
+  activeFilter = nivel;
+  render();
+}
+
+function toggleFilter() {
+  document.getElementById('filterPanel').classList.toggle('open');
+}
+
+function openNav()  { document.getElementById('navOverlay').classList.add('open'); }
+function closeNav() { document.getElementById('navOverlay').classList.remove('open'); }
+function goApp()    { window.location.href = 'index.html'; }
+
+render();
+</script>
+</body>
+</html>

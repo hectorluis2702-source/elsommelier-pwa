@@ -70,7 +70,7 @@ body {{
 }}
 
 .title-page {{
-  page-break-after: right;
+  page-break-after: always;
   text-align: center;
   padding-top: 35%;
 }}
@@ -86,7 +86,7 @@ body {{
 }}
 
 .chapter {{
-  page-break-before: right;
+  page-break-before: always;
 }}
 
 .chapter-title {{

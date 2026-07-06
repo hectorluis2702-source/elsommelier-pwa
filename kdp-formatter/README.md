@@ -112,8 +112,13 @@ URL final de Vercel para que CORS permita las peticiones del frontend.
   `backend/app/kdp_rules.py`, fuente: especificaciones públicas de Amazon
   KDP para interiores de tapa blanda).
 - **Interlineado** fijo en 1.2.
-- **Capitulares**: la primera letra de cada capítulo usa `::first-letter`
-  con un tamaño ampliado, siguiendo la convención tipográfica de imprentas
-  boutique.
-- **Fuentes incrustadas**: `@font-face` con los `.ttf` locales del backend,
-  garantizando que el PDF final las lleve embebidas (requisito de KDP).
+- **Capitulares**: la primera letra de cada capítulo se envuelve en un
+  `<span class="dropcap">` flotante con tamaño ampliado (no se usa
+  `::first-letter` porque WeasyPrint reserva mal el ancho del float con ese
+  pseudo-elemento y el texto queda superpuesto sobre la capitular).
+- **Cada capítulo empieza en página nueva** (`page-break-before: always`),
+  sin forzar página impar/recto — así nunca se inserta una página en blanco
+  de relleno entre capítulos.
+- **Fuentes incrustadas**: `@font-face` con los `.ttf`/`.woff2` locales del
+  backend, garantizando que el PDF final las lleve embebidas (requisito de
+  KDP).

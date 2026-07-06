@@ -1,0 +1,183 @@
+"""Construye el HTML/CSS del interior y lo compila a PDF con WeasyPrint.
+
+Estrategia de dos pasadas:
+  1. Se renderiza el manuscrito con un gutter "estimado" (bracket por defecto)
+     únicamente para averiguar cuántas páginas ocupará realmente.
+  2. Con el número de páginas real, se recalcula el gutter oficial de KDP
+     (la tabla de márgenes cambia según el rango de páginas) y se vuelve a
+     renderizar una segunda vez con la geometría definitiva.
+
+Esto evita el problema típico de maquetación KDP: el gutter depende del
+número de páginas, pero el número de páginas depende del tamaño de fuente,
+márgenes e interlineado que uno mismo está definiendo.
+"""
+
+from dataclasses import dataclass
+from weasyprint import HTML
+
+from . import kdp_rules
+from .fonts import font_face_css, css_family_name
+from .manuscript_parser import Chapter
+
+LINE_HEIGHT = 1.2
+
+
+@dataclass
+class PdfRequest:
+    trim_size_key: str
+    font_key: str
+    font_size_pt: float
+    title: str
+    author: str
+
+
+def _page_css(geometry: kdp_rules.PageGeometry) -> str:
+    return f"""
+@page {{
+  size: {geometry.trim_width_in}in {geometry.trim_height_in}in;
+  margin-top: {geometry.top_in}in;
+  margin-bottom: {geometry.bottom_in}in;
+}}
+@page :left {{
+  margin-left: {geometry.outer_in}in;
+  margin-right: {geometry.gutter_in}in;
+}}
+@page :right {{
+  margin-left: {geometry.gutter_in}in;
+  margin-right: {geometry.outer_in}in;
+}}
+"""
+
+
+def _document_css(req: PdfRequest, geometry: kdp_rules.PageGeometry) -> str:
+    family = css_family_name(req.font_key)
+    return f"""
+{font_face_css(req.font_key)}
+{_page_css(geometry)}
+
+* {{ box-sizing: border-box; }}
+
+body {{
+  font-family: '{family}', serif;
+  font-size: {req.font_size_pt}pt;
+  line-height: {LINE_HEIGHT};
+  text-align: justify;
+  hyphens: auto;
+  -weasy-hyphens: auto;
+  color: #000;
+  orphans: 2;
+  widows: 2;
+}}
+
+.title-page {{
+  page-break-after: right;
+  text-align: center;
+  padding-top: 35%;
+}}
+.title-page h1 {{
+  font-size: {req.font_size_pt * 2.6}pt;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.5em;
+}}
+.title-page .author {{
+  font-size: {req.font_size_pt * 1.3}pt;
+  font-style: italic;
+}}
+
+.chapter {{
+  page-break-before: right;
+}}
+
+.chapter-title {{
+  font-size: {req.font_size_pt * 1.8}pt;
+  font-weight: 400;
+  text-align: center;
+  letter-spacing: 0.03em;
+  margin-top: 12%;
+  margin-bottom: 2em;
+  page-break-after: avoid;
+}}
+
+p {{
+  margin: 0;
+  text-indent: 1.4em;
+}}
+
+p.first-para {{
+  text-indent: 0;
+}}
+
+p.first-para::first-letter {{
+  float: left;
+  font-size: 3.4em;
+  line-height: 0.82;
+  font-weight: 400;
+  padding-right: 0.08em;
+  padding-top: 0.02em;
+}}
+"""
+
+
+def _render_chapter_html(chapter: Chapter, index: int) -> str:
+    title_html = (
+        f'<h2 class="chapter-title">{chapter.title}</h2>'
+        if chapter.title
+        else f'<h2 class="chapter-title">Capítulo {index}</h2>'
+    )
+    paragraphs_html = []
+    for i, p in enumerate(chapter.paragraphs_html):
+        css_class = "first-para" if i == 0 else ""
+        paragraphs_html.append(f'<p class="{css_class}">{p}</p>')
+    return f'<section class="chapter">{title_html}{"".join(paragraphs_html)}</section>'
+
+
+def _build_full_html(
+    chapters: list[Chapter], req: PdfRequest, geometry: kdp_rules.PageGeometry
+) -> str:
+    chapters_html = "".join(
+        _render_chapter_html(ch, idx + 1) for idx, ch in enumerate(chapters)
+    )
+    title_page = ""
+    if req.title:
+        title_page = f"""
+<div class="title-page">
+  <h1>{req.title}</h1>
+  {f'<div class="author">{req.author}</div>' if req.author else ''}
+</div>
+"""
+    return f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<style>{_document_css(req, geometry)}</style>
+</head>
+<body>
+{title_page}
+{chapters_html}
+</body>
+</html>"""
+
+
+def build_pdf(chapters: list[Chapter], req: PdfRequest) -> tuple[bytes, int, kdp_rules.PageGeometry]:
+    """Genera el PDF final. Devuelve (bytes_pdf, num_paginas, geometria_final)."""
+
+    # Pasada 1: geometría provisional con el bracket de gutter más común
+    # (24-150 páginas), solo para medir cuántas páginas ocupa el manuscrito.
+    provisional_geometry = kdp_rules.build_geometry(req.trim_size_key, page_count=100)
+    draft_html = _build_full_html(chapters, req, provisional_geometry)
+    draft_document = HTML(string=draft_html).render()
+    estimated_pages = len(draft_document.pages)
+
+    # Pasada 2: geometría definitiva según el nº de páginas real.
+    final_geometry = kdp_rules.build_geometry(req.trim_size_key, estimated_pages)
+
+    if final_geometry.gutter_in == provisional_geometry.gutter_in:
+        final_document = draft_document
+    else:
+        final_html = _build_full_html(chapters, req, final_geometry)
+        final_document = HTML(string=final_html).render()
+
+    final_page_count = len(final_document.pages)
+    pdf_bytes = final_document.write_pdf()
+    return pdf_bytes, final_page_count, final_geometry

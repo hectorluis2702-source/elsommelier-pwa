@@ -108,15 +108,29 @@ p.first-para {{
   text-indent: 0;
 }}
 
-p.first-para::first-letter {{
+.dropcap {{
   float: left;
   font-size: 3.4em;
-  line-height: 0.82;
+  line-height: 0.78;
   font-weight: 400;
-  padding-right: 0.08em;
-  padding-top: 0.02em;
+  padding-right: 0.1em;
+  padding-top: 0.05em;
 }}
 """
+
+
+def _with_drop_cap(paragraph_html: str) -> str:
+    """Envuelve la primera letra del párrafo en un <span> flotante.
+
+    Se usa un span explícito en vez de ::first-letter porque WeasyPrint
+    calcula mal el ancho reservado del float con ese pseudo-elemento y el
+    texto de la primera línea termina superpuesto sobre la capitular.
+    Si el párrafo empieza con una etiqueta HTML (p.ej. cursiva), se omite
+    la capitular para no romper el marcado.
+    """
+    if not paragraph_html or paragraph_html[0] == "<":
+        return paragraph_html
+    return f'<span class="dropcap">{paragraph_html[0]}</span>{paragraph_html[1:]}'
 
 
 def _render_chapter_html(chapter: Chapter, index: int) -> str:
@@ -127,8 +141,10 @@ def _render_chapter_html(chapter: Chapter, index: int) -> str:
     )
     paragraphs_html = []
     for i, p in enumerate(chapter.paragraphs_html):
-        css_class = "first-para" if i == 0 else ""
-        paragraphs_html.append(f'<p class="{css_class}">{p}</p>')
+        if i == 0:
+            paragraphs_html.append(f'<p class="first-para">{_with_drop_cap(p)}</p>')
+        else:
+            paragraphs_html.append(f"<p>{p}</p>")
     return f'<section class="chapter">{title_html}{"".join(paragraphs_html)}</section>'
 
 

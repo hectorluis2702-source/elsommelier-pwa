@@ -16,8 +16,8 @@ from dataclasses import dataclass
 from weasyprint import HTML
 
 from . import kdp_rules
+from .content_model import Block, Chapter
 from .fonts import font_face_css, css_family_name
-from .manuscript_parser import Chapter
 
 LINE_HEIGHT = 1.2
 
@@ -116,6 +116,61 @@ p.first-para {{
   padding-right: 0.1em;
   padding-top: 0.05em;
 }}
+
+h3.subheading {{
+  font-size: {req.font_size_pt * 1.05}pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 2em 0 1em;
+  page-break-after: avoid;
+}}
+
+blockquote.pull-quote {{
+  margin: 1.2em 2.2em;
+  font-style: italic;
+  text-align: left;
+  text-indent: 0;
+  border-left: 2px solid #000;
+  padding-left: 1em;
+}}
+
+p.list-item {{
+  margin: 0.5em 0;
+  text-indent: -1em;
+  padding-left: 1em;
+}}
+p.list-item::before {{
+  content: "— ";
+}}
+
+p.divider {{
+  text-align: center;
+  margin: 1.6em 0;
+  letter-spacing: 0.5em;
+  text-indent: 0;
+}}
+
+.callout {{
+  margin: 1.4em 1.4em;
+  padding: 0.8em 1em;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}}
+.callout .callout-label {{
+  display: block;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 0.92em;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4em;
+  text-indent: 0;
+}}
+.callout p {{
+  text-indent: 0;
+  margin: 0;
+}}
 """
 
 
@@ -133,19 +188,44 @@ def _with_drop_cap(paragraph_html: str) -> str:
     return f'<span class="dropcap">{paragraph_html[0]}</span>{paragraph_html[1:]}'
 
 
+def _render_block(block: Block, is_first_paragraph: bool) -> str:
+    if block.kind == "paragraph":
+        if is_first_paragraph:
+            return f'<p class="first-para">{_with_drop_cap(block.html)}</p>'
+        return f"<p>{block.html}</p>"
+    if block.kind == "subheading":
+        return f'<h3 class="subheading">{block.html}</h3>'
+    if block.kind == "quote":
+        return f'<blockquote class="pull-quote">{block.html}</blockquote>'
+    if block.kind == "list_item":
+        return f'<p class="list-item">{block.html}</p>'
+    if block.kind == "divider":
+        return f'<p class="divider">{block.html}</p>'
+    if block.kind == "callout":
+        paragraphs = "".join(f"<p>{p}</p>" for p in block.html.split("\n\n") if p)
+        return (
+            '<div class="callout">'
+            f'<span class="callout-label">{block.label}</span>'
+            f"{paragraphs}"
+            "</div>"
+        )
+    return ""
+
+
 def _render_chapter_html(chapter: Chapter, index: int) -> str:
     title_html = (
         f'<h2 class="chapter-title">{chapter.title}</h2>'
         if chapter.title
         else f'<h2 class="chapter-title">Capítulo {index}</h2>'
     )
-    paragraphs_html = []
-    for i, p in enumerate(chapter.paragraphs_html):
-        if i == 0:
-            paragraphs_html.append(f'<p class="first-para">{_with_drop_cap(p)}</p>')
-        else:
-            paragraphs_html.append(f"<p>{p}</p>")
-    return f'<section class="chapter">{title_html}{"".join(paragraphs_html)}</section>'
+    first_paragraph_seen = False
+    blocks_html = []
+    for block in chapter.blocks:
+        is_first = block.kind == "paragraph" and not first_paragraph_seen
+        if is_first:
+            first_paragraph_seen = True
+        blocks_html.append(_render_block(block, is_first))
+    return f'<section class="chapter">{title_html}{"".join(blocks_html)}</section>'
 
 
 def _build_full_html(

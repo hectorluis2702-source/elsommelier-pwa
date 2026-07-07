@@ -1,9 +1,18 @@
 # KDP Manuscript Formatter
 
-Aplicación que convierte un manuscrito en texto plano o Markdown en un PDF de
-interior listo para imprimir en Amazon KDP: tamaño de libro (trim size),
-márgenes en espejo (gutter) calculados según el número de páginas,
-interlineado 1.2 y capitulares (drop caps) al inicio de cada capítulo.
+Aplicación que convierte un manuscrito (texto plano, Markdown, o uno o
+varios capítulos en HTML) en un PDF de interior listo para imprimir en
+Amazon KDP: tamaño de libro (trim size), márgenes en espejo (gutter)
+calculados según el número de páginas, interlineado 1.2 y capitulares
+(drop caps) al inicio de cada capítulo.
+
+Soporta subir **varios archivos `.html`** a la vez (uno por capítulo). Cada
+archivo se interpreta con `backend/app/html_parser.py`, que reconstruye
+párrafos, subtítulos, citas, listas y notas destacadas ("Dato curioso",
+"Reflexión", "Para llevar", etc.) a partir de una estructura HTML tipo
+lector web, y ordena los capítulos por el número detectado en cada uno. El
+título y autor del libro se detectan automáticamente si el HTML los expone
+(p. ej. `<span class="book-label">Título · Autor</span>`).
 
 Este módulo vive dentro del repo `elsommelier-pwa` como un proyecto
 independiente (`kdp-formatter/`) y no modifica la PWA existente.

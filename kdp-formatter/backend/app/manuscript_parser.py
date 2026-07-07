@@ -8,20 +8,15 @@ Si no se detecta ningún encabezado, todo el manuscrito se trata como un
 """
 
 import re
-from dataclasses import dataclass, field
 
 import markdown as md
+
+from .content_model import Block, Chapter
 
 _CHAPTER_HEADING_RE = re.compile(
     r"^\s*(#\s+.+|(cap[ií]tulo|chapter)\s+.+)$", re.IGNORECASE
 )
 _MD_H1_RE = re.compile(r"^\s*#\s+(.+)$")
-
-
-@dataclass
-class Chapter:
-    title: str
-    paragraphs_html: list[str] = field(default_factory=list)
 
 
 def _clean_title(line: str) -> str:
@@ -31,12 +26,12 @@ def _clean_title(line: str) -> str:
     return line.strip()
 
 
-def _paragraphs_to_html(text: str) -> list[str]:
+def _paragraphs_to_blocks(text: str) -> list[Block]:
     """Convierte un bloque de texto (varios párrafos separados por líneas en
-    blanco) en una lista de fragmentos HTML de párrafo, aplicando énfasis
-    Markdown básico (negrita/cursiva)."""
+    blanco) en bloques de párrafo, aplicando énfasis Markdown básico
+    (negrita/cursiva)."""
     blocks = re.split(r"\n\s*\n", text.strip())
-    html_paragraphs = []
+    result = []
     for block in blocks:
         block = block.strip()
         if not block:
@@ -44,8 +39,8 @@ def _paragraphs_to_html(text: str) -> list[str]:
         rendered = md.markdown(block)
         rendered = re.sub(r"^<p>|</p>$", "", rendered.strip())
         rendered = rendered.replace("\n", " ")
-        html_paragraphs.append(rendered)
-    return html_paragraphs
+        result.append(Block(kind="paragraph", html=rendered))
+    return result
 
 
 def parse_manuscript(raw_text: str) -> list[Chapter]:
@@ -60,8 +55,8 @@ def parse_manuscript(raw_text: str) -> list[Chapter]:
     chapters: list[Chapter] = []
 
     if not chapter_boundaries:
-        paragraphs = _paragraphs_to_html(raw_text)
-        chapters.append(Chapter(title="", paragraphs_html=paragraphs))
+        blocks = _paragraphs_to_blocks(raw_text)
+        chapters.append(Chapter(title="", blocks=blocks))
         return chapters
 
     for i, (start_idx, title) in enumerate(chapter_boundaries):
@@ -72,8 +67,8 @@ def parse_manuscript(raw_text: str) -> list[Chapter]:
         )
         body_lines = lines[start_idx + 1 : end_idx]
         body_text = "\n".join(body_lines)
-        paragraphs = _paragraphs_to_html(body_text)
-        if paragraphs:
-            chapters.append(Chapter(title=title, paragraphs_html=paragraphs))
+        blocks = _paragraphs_to_blocks(body_text)
+        if blocks:
+            chapters.append(Chapter(title=title, blocks=blocks))
 
     return chapters

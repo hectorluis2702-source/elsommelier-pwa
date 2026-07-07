@@ -3,35 +3,38 @@
 import { useCallback, useRef, useState } from "react";
 
 interface DropzoneProps {
-  file: File | null;
-  onFileSelected: (file: File) => void;
+  files: File[];
+  onFilesSelected: (files: File[]) => void;
 }
 
-const ACCEPTED_EXTENSIONS = [".txt", ".md", ".markdown"];
+const ACCEPTED_EXTENSIONS = [".txt", ".md", ".markdown", ".html", ".htm"];
 
 function isAcceptedFile(file: File): boolean {
   const name = file.name.toLowerCase();
   return ACCEPTED_EXTENSIONS.some((ext) => name.endsWith(ext));
 }
 
-export default function Dropzone({ file, onFileSelected }: DropzoneProps) {
+export default function Dropzone({ files, onFilesSelected }: DropzoneProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = useCallback(
-    (files: FileList | null) => {
-      if (!files || files.length === 0) return;
-      const candidate = files[0];
-      if (!isAcceptedFile(candidate)) {
-        setError("Solo se aceptan archivos .txt o .md");
+    (fileList: FileList | null) => {
+      if (!fileList || fileList.length === 0) return;
+      const candidates = Array.from(fileList);
+      const accepted = candidates.filter(isAcceptedFile);
+      if (accepted.length === 0) {
+        setError("Solo se aceptan archivos .txt, .md o .html");
         return;
       }
       setError(null);
-      onFileSelected(candidate);
+      onFilesSelected(accepted);
     },
-    [onFileSelected]
+    [onFilesSelected]
   );
+
+  const totalSizeKb = files.reduce((sum, f) => sum + f.size, 0) / 1024;
 
   return (
     <div>
@@ -56,7 +59,8 @@ export default function Dropzone({ file, onFileSelected }: DropzoneProps) {
         <input
           ref={inputRef}
           type="file"
-          accept=".txt,.md,.markdown"
+          multiple
+          accept=".txt,.md,.markdown,.html,.htm"
           className="hidden"
           onChange={(e) => handleFiles(e.target.files)}
         />
@@ -75,11 +79,15 @@ export default function Dropzone({ file, onFileSelected }: DropzoneProps) {
           />
         </svg>
 
-        {file ? (
+        {files.length > 0 ? (
           <div>
-            <p className="font-display text-xl text-gold-100">{file.name}</p>
+            <p className="font-display text-xl text-gold-100">
+              {files.length === 1
+                ? files[0].name
+                : `${files.length} capítulos seleccionados`}
+            </p>
             <p className="mt-1 text-xs uppercase tracking-widest text-cream/40">
-              {(file.size / 1024).toFixed(0)} KB · haz clic para cambiar
+              {totalSizeKb.toFixed(0)} KB · haz clic para cambiar
             </p>
           </div>
         ) : (
@@ -88,11 +96,23 @@ export default function Dropzone({ file, onFileSelected }: DropzoneProps) {
               Arrastra tu manuscrito aquí
             </p>
             <p className="mt-2 text-xs uppercase tracking-widest text-cream/40">
-              .txt o .md · o haz clic para seleccionar
+              .txt, .md o .html (uno o varios capítulos) · o haz clic para seleccionar
             </p>
           </div>
         )}
       </div>
+
+      {files.length > 1 && (
+        <ul className="mt-4 space-y-1 text-xs text-cream/50">
+          {files.map((f) => (
+            <li key={f.name} className="flex justify-between border-b border-gold-200/10 py-1">
+              <span>{f.name}</span>
+              <span className="text-cream/30">{(f.size / 1024).toFixed(0)} KB</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
       {error && <p className="mt-3 text-sm text-burgundy-600">{error}</p>}
     </div>
   );

@@ -10,8 +10,15 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 type GenerationState = "idle" | "loading" | "success" | "error";
 
+function extractPlainText(raw: string): string {
+  return raw
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<[^>]+>/g, " ");
+}
+
 export default function Home() {
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [manuscriptText, setManuscriptText] = useState("");
   const [trimSize, setTrimSize] = useState<TrimSizeKey>("6x9");
   const [fontSize, setFontSize] = useState(11);
@@ -27,21 +34,21 @@ export default function Home() {
     [manuscriptText]
   );
 
-  async function handleFileSelected(selected: File) {
-    setFile(selected);
-    const text = await selected.text();
-    setManuscriptText(text);
+  async function handleFilesSelected(selected: File[]) {
+    setFiles(selected);
+    const texts = await Promise.all(selected.map((f) => f.text()));
+    setManuscriptText(texts.map(extractPlainText).join(" "));
   }
 
   async function handleGenerate() {
-    if (!file) return;
+    if (files.length === 0) return;
     setState("loading");
     setErrorMessage(null);
     setResultInfo(null);
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      files.forEach((f) => formData.append("file", f));
       formData.append("trim_size", trimSize);
       formData.append("font_family", fontFamily);
       formData.append("font_size", String(fontSize));
@@ -88,19 +95,21 @@ export default function Home() {
         </h1>
         <div className="gold-divider mx-auto mt-6" />
         <p className="mx-auto mt-6 max-w-xl text-sm text-cream/50">
-          Sube tu manuscrito y obtén un interior de libro listo para imprimir
-          en Amazon KDP: márgenes en espejo, capitulares e interlineado
-          profesional, calculados automáticamente.
+          Sube tu manuscrito (uno o varios capítulos, en .txt, .md o .html) y
+          obtén un interior de libro listo para imprimir en Amazon KDP:
+          márgenes en espejo, capitulares e interlineado profesional,
+          calculados automáticamente.
         </p>
       </header>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.3fr_1fr]">
         <div className="space-y-8">
-          <Dropzone file={file} onFileSelected={handleFileSelected} />
+          <Dropzone files={files} onFilesSelected={handleFilesSelected} />
 
           {wordCount > 0 && (
             <p className="text-center text-xs uppercase tracking-widest text-cream/40">
               {wordCount.toLocaleString("es")} palabras detectadas
+              {files.length > 1 ? ` en ${files.length} capítulos` : ""}
             </p>
           )}
 
@@ -119,7 +128,7 @@ export default function Home() {
 
           <button
             type="button"
-            disabled={!file || state === "loading"}
+            disabled={files.length === 0 || state === "loading"}
             onClick={handleGenerate}
             className="w-full rounded-sm border border-gold-200/30 bg-burgundy-900 px-6 py-4 font-display text-lg tracking-wide text-gold-100 transition-colors duration-300 hover:bg-burgundy-800 disabled:cursor-not-allowed disabled:opacity-40"
           >

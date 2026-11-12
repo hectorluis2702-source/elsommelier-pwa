@@ -1,0 +1,33 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "outputDirectory": "out",
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/vinos", "destination": "/vinos/" },
+    { "source": "/maridaje", "destination": "/maridaje/" },
+    { "source": "/videos", "destination": "/videos/" },
+    { "source": "/mapa", "destination": "/mapa/" },
+    { "source": "/bodega", "destination": "/bodega/" },
+    { "source": "/sommelier", "destination": "/sommelier/" },
+    { "source": "/catalab", "destination": "/catalab/" },
+    { "source": "/academia", "destination": "/academia/" },
+    { "source": "/perfil", "destination": "/perfil/" }
+  ]
+}

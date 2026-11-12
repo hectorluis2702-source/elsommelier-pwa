@@ -47,7 +47,7 @@ export function BottomTabBar() {
       {moreOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-black/45"
+          className="fixed inset-0 z-40 bg-black/40"
           aria-label="Cerrar menu"
           onClick={() => setMoreOpen(false)}
         />
@@ -58,7 +58,7 @@ export function BottomTabBar() {
           moreOpen ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
         }`}
       >
-        <div className="glass-card overflow-hidden p-2">
+        <div className="glass-card overflow-hidden p-2" style={{ color: "var(--text)" }}>
           <p className="section-label px-3 pb-2 pt-2">Mas del templo</p>
           <div className="grid grid-cols-2 gap-1.5">
             {MORE.map(({ href, label, icon: Icon, desc }) => {
@@ -70,13 +70,15 @@ export function BottomTabBar() {
                   onClick={() => setMoreOpen(false)}
                   className="flex items-center gap-2.5 rounded-temple-sm px-3 py-2.5 transition-colors"
                   style={{
-                    background: active ? "var(--radial-glow)" : "transparent",
-                    color: active ? "var(--gold)" : "var(--text)",
+                    background: active ? "rgba(61, 10, 20, 0.08)" : "transparent",
+                    color: active ? "var(--nav-fg-active)" : "var(--text)",
                   }}
                 >
                   <Icon active={active} />
                   <span>
-                    <span className="block font-mono text-[0.6rem] uppercase tracking-wider">{label}</span>
+                    <span className="block font-mono text-[0.6rem] uppercase tracking-wider">
+                      {label}
+                    </span>
                     <span className="block text-[0.65rem]" style={{ color: "var(--text-dim)" }}>
                       {desc}
                     </span>
@@ -88,11 +90,8 @@ export function BottomTabBar() {
         </div>
       </div>
 
-      <nav
-        className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg border-t border-white/10 bg-black/55 backdrop-blur-xl"
-        style={{ paddingBottom: "var(--safe-bottom)" }}
-      >
-        <div className="flex items-stretch justify-around px-1 pt-1.5 pb-1.5">
+      <nav className="glass-tabbar fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg" style={{ paddingBottom: "var(--safe-bottom)" }}>
+        <div className="flex items-stretch justify-around px-1 pb-1.5 pt-1.5">
           {PRIMARY.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href);
             return (
@@ -100,10 +99,12 @@ export function BottomTabBar() {
                 key={href}
                 href={href}
                 className="flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-1 transition-colors"
-                style={{ color: active ? "var(--gold)" : "var(--text-dim)" }}
+                style={{ color: active ? "var(--nav-fg-active)" : "var(--nav-fg)" }}
               >
                 <Icon active={active} />
-                <span className="truncate font-mono text-[0.5rem] uppercase tracking-[0.1em]">{label}</span>
+                <span className="truncate font-mono text-[0.58rem] font-medium uppercase tracking-[0.08em]">
+                  {label}
+                </span>
               </Link>
             );
           })}
@@ -111,12 +112,16 @@ export function BottomTabBar() {
             type="button"
             onClick={() => setMoreOpen((v) => !v)}
             className="flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-1 transition-colors"
-            style={{ color: moreOpen || moreActive ? "var(--gold)" : "var(--text-dim)" }}
+            style={{
+              color: moreOpen || moreActive ? "var(--nav-fg-active)" : "var(--nav-fg)",
+            }}
             aria-expanded={moreOpen}
             aria-label="Mas opciones"
           >
             <IconMore active={moreOpen || moreActive} />
-            <span className="truncate font-mono text-[0.5rem] uppercase tracking-[0.1em]">Mas</span>
+            <span className="truncate font-mono text-[0.58rem] font-medium uppercase tracking-[0.08em]">
+              Mas
+            </span>
           </button>
         </div>
       </nav>

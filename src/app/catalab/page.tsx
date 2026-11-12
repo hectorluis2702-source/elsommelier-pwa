@@ -68,7 +68,7 @@ export default function CataLabPage() {
         <div className="glass-card overflow-hidden" style={{ borderLeft: "3px solid var(--gold)" }}>
           <div className="p-4">
             <div className="section-label mb-2">Analisis del Maestro</div>
-            <h2 className="font-display text-2xl" style={{ color: "var(--cream)" }}>
+            <h2 className="font-display text-2xl" style={{ color: "var(--text)" }}>
               {nombre}
             </h2>
             <p className="mt-1 font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: "var(--gold)" }}>
@@ -186,7 +186,7 @@ export default function CataLabPage() {
             <circle cx="12" cy="13.5" r="3.5" stroke="currentColor" strokeWidth="1.5" />
           </svg>
         </div>
-        <div className="font-display text-xl" style={{ color: "var(--cream)" }}>
+        <div className="font-display text-xl" style={{ color: "var(--text)" }}>
           Toca para escanear etiqueta
         </div>
         <div className="font-mono text-[0.55rem] uppercase tracking-wider" style={{ color: "var(--text-dim)" }}>

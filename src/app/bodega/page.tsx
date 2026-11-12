@@ -59,7 +59,7 @@ function BottleSlot({
       </div>
       <div
         className="mt-1 w-full truncate px-0.5 text-center font-mono text-[0.45rem] uppercase tracking-wide"
-        style={{ color: "var(--cream)" }}
+        style={{ color: "var(--text)" }}
         title={nombre}
       >
         {nombre}
@@ -133,7 +133,7 @@ export default function BodegaPage() {
             className="mx-auto mb-4 h-16 w-8 rounded-t-full rounded-b-sm opacity-60"
             style={{ background: "linear-gradient(180deg, #722F37, #1a0808)" }}
           />
-          <div className="font-display text-xl" style={{ color: "var(--cream)" }}>
+          <div className="font-display text-xl" style={{ color: "var(--text)" }}>
             Tu bodega esta vacia
           </div>
           <p className="mx-auto mt-2 max-w-xs text-sm" style={{ color: "var(--text-dim)" }}>

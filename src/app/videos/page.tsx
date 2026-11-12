@@ -80,7 +80,7 @@ export default function VideosPage() {
             </div>
             <div className="p-4" style={{ background: "var(--glass-bg)" }}>
               <div className="section-label mb-1">{v.categoria}</div>
-              <h2 className="font-display text-xl leading-tight" style={{ color: "var(--cream)" }}>
+              <h2 className="font-display text-xl leading-tight" style={{ color: "var(--text)" }}>
                 {v.titulo}
               </h2>
               <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>

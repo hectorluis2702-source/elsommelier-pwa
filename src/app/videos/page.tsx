@@ -93,7 +93,7 @@ export default function VideosPage() {
 
       {playing ? (
         <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/60 p-4 sm:items-center">
-          <div className="glass-card w-full max-w-md overflow-hidden animate-section-in">
+          <div className="glass-card w-full max-w-3xl overflow-hidden animate-section-in">
             <div className={`flex h-48 items-center justify-center bg-gradient-to-br ${playing.tone}`}>
               <div className="text-center px-6">
                 <div className="section-label mb-2">Proximamente</div>

@@ -37,13 +37,17 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       )}
 
+      {/* Full-bleed temple shell — wide on desktop, no phone-column cage */}
       <div
-        className={`mx-auto flex min-h-screen max-w-lg flex-col transition-opacity duration-500 ${
+        className={`flex min-h-screen w-full flex-col transition-opacity duration-500 ${
           splash ? "opacity-0" : "opacity-100"
         }`}
+        style={{ background: "var(--bg)" }}
       >
         <AppHeader />
-        <main className="flex-1 px-4 pb-28 pt-5 animate-section-in">{children}</main>
+        <main className="mx-auto w-full max-w-[1600px] flex-1 px-4 pb-28 pt-5 animate-section-in sm:px-6 md:px-10 lg:px-14">
+          {children}
+        </main>
         <BottomTabBar />
       </div>
     </>

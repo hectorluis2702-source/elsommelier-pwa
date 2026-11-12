@@ -54,7 +54,7 @@ export function BottomTabBar() {
       )}
 
       <div
-        className={`fixed inset-x-0 bottom-[4.75rem] z-50 mx-auto max-w-lg px-3 transition-all duration-300 ${
+        className={`fixed inset-x-0 bottom-[4.75rem] z-50 mx-auto w-full max-w-[1600px] px-3 transition-all duration-300 sm:px-6 md:px-10 lg:px-14 ${
           moreOpen ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
         }`}
       >
@@ -90,8 +90,11 @@ export function BottomTabBar() {
         </div>
       </div>
 
-      <nav className="glass-tabbar fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg" style={{ paddingBottom: "var(--safe-bottom)" }}>
-        <div className="flex items-stretch justify-around px-1 pb-1.5 pt-1.5">
+      <nav
+        className="glass-tabbar fixed inset-x-0 bottom-0 z-50 w-full"
+        style={{ paddingBottom: "var(--safe-bottom)" }}
+      >
+        <div className="mx-auto flex w-full max-w-[1600px] items-stretch justify-around px-1 pb-1.5 pt-1.5 sm:px-6 md:px-10 lg:px-14">
           {PRIMARY.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href);
             return (

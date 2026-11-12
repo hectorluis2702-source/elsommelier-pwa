@@ -173,7 +173,7 @@ export default function AcademiaPage() {
     const next = idx >= 0 && idx < leccionesDelModulo.length - 1 ? leccionesDelModulo[idx + 1] : null;
 
     return (
-      <div className="relative -mx-4 -mt-5 min-h-[80vh] bg-[var(--bg)] pb-8">
+      <div className="relative -mx-4 -mt-5 min-h-[80vh] bg-[var(--bg)] pb-8 sm:-mx-6 md:-mx-10 lg:-mx-14">
         <div className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--surface-2)]/95 px-4 py-3 backdrop-blur-md">
           <button
             type="button"

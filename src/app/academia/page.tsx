@@ -152,10 +152,10 @@ export default function AcademiaPage() {
             onClick={regresarAlIndice}
             className="mb-2 inline-flex items-center gap-2 rounded-temple-sm border border-[var(--gold)]/50 px-3 py-2 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--gold)]"
           >
-            ← Regresar al indice
+            ← Regresar al índice
           </button>
           <div className="font-mono text-[0.65rem] uppercase tracking-wider text-[var(--gold)]">
-            Leccion {num}
+            Lección {num}
             {leccionActiva.duracion_estimada
               ? ` · ${leccionActiva.duracion_estimada} min`
               : ""}
@@ -185,7 +185,7 @@ export default function AcademiaPage() {
               onClick={regresarAlIndice}
               className="flex-1 rounded-temple border border-[var(--gold)] py-3.5 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--gold)]"
             >
-              Regresar al indice
+              Regresar al índice
             </button>
             {prev ? (
               <button
@@ -220,18 +220,18 @@ export default function AcademiaPage() {
           onClick={regresarAModulos}
           className="mb-4 inline-flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--gold)]"
         >
-          ← Todos los modulos
+          ← Todos los módulos
         </button>
 
         <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[var(--gold)]">
-          Plan {plan} · Indice
+          Plan {plan} · Índice
         </div>
         <h1 className="font-display text-3xl text-[#f5efe0] sm:text-4xl">
           {NIVEL_LABEL[moduloActivo]}
         </h1>
         <p className="mt-2 text-base text-[#d4c8b0]">
-          {leccionesDelModulo.length} leccion{leccionesDelModulo.length === 1 ? "" : "es"} en este
-          modulo
+          {leccionesDelModulo.length} lección{leccionesDelModulo.length === 1 ? "" : "es"} en este
+          módulo
         </p>
 
         <div className="mt-6 overflow-hidden rounded-temple border border-[var(--border)] bg-[#1c1414]">
@@ -242,7 +242,7 @@ export default function AcademiaPage() {
             aria-expanded={indiceAbierto}
           >
             <span className="font-mono text-[0.75rem] uppercase tracking-[0.14em] text-[var(--gold)]">
-              Indice de lecciones
+              Índice de lecciones
             </span>
             <span className="text-[var(--gold)]">{indiceAbierto ? "▴" : "▾"}</span>
           </button>
@@ -269,7 +269,7 @@ export default function AcademiaPage() {
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block font-mono text-[0.6rem] uppercase tracking-wider text-[var(--gold)]">
-                          Leccion {num}
+                          Lección {num}
                           {dur ? ` · ${dur}` : ""}
                         </span>
                         <span className="mt-1 block font-display text-xl leading-snug text-[#f5efe0]">
@@ -325,7 +325,7 @@ export default function AcademiaPage() {
       </div>
 
       <p className="relative mb-4 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[var(--gold)]">
-        Selecciona un modulo
+        Selecciona un módulo
       </p>
 
       <div className="relative space-y-3">
@@ -351,7 +351,7 @@ export default function AcademiaPage() {
                 <span className="mt-1 block font-mono text-[0.65rem] uppercase tracking-wider text-[#d4c8b0]">
                   {locked
                     ? "Bloqueado — actualiza tu plan"
-                    : `${count} leccion${count === 1 ? "" : "es"} · Ver indice`}
+                    : `${count} lección${count === 1 ? "" : "es"} · Ver índice`}
                 </span>
               </span>
               <span className="font-mono text-sm text-[var(--gold)]">{locked ? "Bloq." : "›"}</span>

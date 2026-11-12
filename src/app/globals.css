@@ -1,3 +1,6 @@
+/* Runtime CDN fonts — avoids next/font/google build-time fetch failures on Vercel */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +9,12 @@
    EL TEMPLO DEL VINO — Theme Tokens
    Dark Elegance (nocturno) / Chardonnay (diurno)
    ═══════════════════════════════════════════ */
+
+:root {
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-dm-sans: "DM Sans", system-ui, sans-serif;
+  --font-dm-mono: "DM Mono", ui-monospace, monospace;
+}
 
 :root,
 [data-theme="dark"] {

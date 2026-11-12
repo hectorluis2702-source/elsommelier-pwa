@@ -1,31 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, DM_Mono, DM_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ToastProvider } from "@/components/providers/ToastProvider";
 import { AppShell } from "@/components/layout/AppShell";
 import "./globals.css";
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-dm-sans",
-  display: "swap",
-});
-
-const dmMono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400"],
-  variable: "--font-dm-mono",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "El Sommelier RD",
@@ -50,12 +27,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="es"
-      data-theme="dark"
-      className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="es" data-theme="dark" suppressHydrationWarning>
       <body>
         <ThemeProvider>
           <ToastProvider>

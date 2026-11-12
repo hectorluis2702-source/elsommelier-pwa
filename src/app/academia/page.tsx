@@ -178,11 +178,11 @@ export default function AcademiaPage() {
           <button
             type="button"
             onClick={regresarAlIndice}
-            className="mb-2 inline-flex items-center gap-2 rounded-temple-sm border border-[var(--gold)]/50 px-3 py-2 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--gold)]"
+            className="mb-2 inline-flex items-center gap-2 rounded-temple-sm border border-[var(--burgundy)]/40 px-3 py-2 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--burgundy)]"
           >
             ← Regresar al índice
           </button>
-          <div className="font-mono text-[0.65rem] uppercase tracking-wider text-[var(--gold)]">
+          <div className="font-mono text-[0.65rem] uppercase tracking-wider text-[var(--burgundy)]">
             Lección {num}
             {leccionActiva.duracion_estimada
               ? ` · ${leccionActiva.duracion_estimada} min`
@@ -211,7 +211,7 @@ export default function AcademiaPage() {
             <button
               type="button"
               onClick={regresarAlIndice}
-              className="flex-1 rounded-temple border border-[var(--gold)] py-3.5 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--gold)]"
+              className="flex-1 rounded-temple border border-[var(--burgundy)] py-3.5 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--burgundy)]"
             >
               Regresar al índice
             </button>
@@ -246,12 +246,12 @@ export default function AcademiaPage() {
         <button
           type="button"
           onClick={regresarAModulos}
-          className="mb-4 inline-flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--gold)]"
+          className="mb-4 inline-flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-wider text-[var(--burgundy)]"
         >
           ← Todos los módulos
         </button>
 
-        <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+        <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[var(--burgundy)]">
           Plan {plan} · Índice
         </div>
         <h1 className="font-display text-3xl text-[var(--text)] sm:text-4xl">
@@ -269,10 +269,10 @@ export default function AcademiaPage() {
             className="flex w-full items-center justify-between px-4 py-4 text-left"
             aria-expanded={indiceAbierto}
           >
-            <span className="font-mono text-[0.75rem] uppercase tracking-[0.14em] text-[var(--gold)]">
+            <span className="font-mono text-[0.75rem] uppercase tracking-[0.14em] text-[var(--burgundy)]">
               Índice de lecciones
             </span>
-            <span className="text-[var(--gold)]">{indiceAbierto ? "▴" : "▾"}</span>
+            <span className="text-[var(--burgundy)]">{indiceAbierto ? "▴" : "▾"}</span>
           </button>
 
           {indiceAbierto ? (
@@ -292,11 +292,11 @@ export default function AcademiaPage() {
                       onClick={() => abrirLeccion(l)}
                       className="flex w-full items-start gap-3 border-b border-[var(--border)]/70 px-4 py-4 text-left last:border-b-0 transition-colors hover:bg-[var(--surface-2)]"
                     >
-                      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--gold)]/50 font-mono text-[0.7rem] text-[var(--gold)]">
+                      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--burgundy)]/40 font-mono text-[0.7rem] text-[var(--burgundy)]">
                         {num}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block font-mono text-[0.6rem] uppercase tracking-wider text-[var(--gold)]">
+                        <span className="block font-mono text-[0.6rem] uppercase tracking-wider text-[var(--burgundy)]">
                           Lección {num}
                           {dur ? ` · ${dur}` : ""}
                         </span>
@@ -304,7 +304,7 @@ export default function AcademiaPage() {
                           {l.titulo}
                         </span>
                       </span>
-                      <span className="mt-1 text-[var(--gold)]">›</span>
+                      <span className="mt-1 text-[var(--burgundy)]">›</span>
                     </button>
                   );
                 })
@@ -322,7 +322,7 @@ export default function AcademiaPage() {
       <div className="pointer-events-none absolute -left-16 top-0 h-72 w-72 rounded-full bg-[#2a0808]/40 blur-3xl" />
 
       <div className="relative pb-2 pt-1 text-center">
-        <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-[var(--gold)]">
+        <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-[var(--burgundy)]">
           Academia El Sommelier RD
         </div>
         <h1 className="font-display text-4xl font-light text-[var(--text)]">
@@ -330,7 +330,7 @@ export default function AcademiaPage() {
         </h1>
       </div>
 
-      <div className="relative mb-4 mt-4 inline-flex rounded-full border border-[var(--gold)]/50 bg-[var(--surface-2)] px-3.5 py-1.5 font-mono text-[0.65rem] uppercase tracking-wider text-[var(--gold)]">
+      <div className="relative mb-4 mt-4 inline-flex rounded-full border border-[var(--burgundy)]/40 bg-[var(--surface-2)] px-3.5 py-1.5 font-mono text-[0.65rem] uppercase tracking-wider text-[var(--burgundy)]">
         Plan {plan.charAt(0).toUpperCase() + plan.slice(1)} - Activo
       </div>
 
@@ -352,7 +352,7 @@ export default function AcademiaPage() {
         </div>
       </div>
 
-      <p className="relative mb-4 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[var(--gold)]">
+      <p className="relative mb-4 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[var(--burgundy)]">
         Selecciona un módulo
       </p>
 
@@ -512,7 +512,7 @@ function LeccionReader({
           {leccion.objetivos.map((o) => (
             <div
               key={o}
-              className="mb-3 border-l-2 border-[var(--gold)]/55 pl-3.5 text-[1.08rem] leading-[1.65] text-[var(--text)]"
+              className="mb-3 border-l-2 border-[var(--burgundy)]/55 pl-3.5 text-[1.08rem] leading-[1.65] text-[var(--text)]"
             >
               {o}
             </div>

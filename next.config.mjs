@@ -1,22 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Static export so Vercel (and the legacy static PWA project settings)
+  // always get a real out/index.html at `/` — avoids platform NOT_FOUND.
+  output: "export",
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "**" },
-    ],
+    unoptimized: true,
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
-  async headers() {
-    return [
-      {
-        source: "/sw.js",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
-          { key: "Service-Worker-Allowed", value: "/" },
-        ],
-      },
-    ];
-  },
+  // Emit out/vinos/index.html so /vinos resolves on static hosts (Vercel Other/static).
+  trailingSlash: true,
 };
 
 export default nextConfig;

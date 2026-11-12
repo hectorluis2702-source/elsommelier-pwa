@@ -78,11 +78,11 @@ export default function VinosPage() {
       <div className="pointer-events-none absolute -right-10 top-0 h-64 w-64 rounded-full bg-[#800020]/18 blur-3xl" />
 
       <div className="relative pb-2 pt-1 text-center">
-        <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-[var(--gold)]">
+        <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-[var(--burgundy)]">
           Catalogo
         </div>
-        <h1 className="font-display text-4xl font-light text-[#f5efe0] drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]">
-          Explora <em className="text-[var(--gold)]">vinos</em>
+        <h1 className="font-display text-4xl font-light text-[var(--text)]">
+          Explora <em className="text-[var(--burgundy)]">vinos</em>
         </h1>
       </div>
 

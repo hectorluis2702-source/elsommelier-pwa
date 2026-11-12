@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { HeroMediaCard } from "@/components/ui/HeroMediaCard";
 import { PLATOS_TRADICIONALES, PRESUPUESTOS } from "@/lib/platos";
 import { maridajeParaPlato } from "@/lib/api";
@@ -25,14 +25,10 @@ export default function MaridajePage() {
   const [presupuesto, setPresupuesto] = useState("cualquiera");
   const [loading, setLoading] = useState(false);
   const [resultHtml, setResultHtml] = useState<ReactNode>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
-  const selectedNombre =
-    platoLibre.trim() ||
-    PLATOS_TRADICIONALES.find((p) => p.id === platoId)?.nombre ||
-    "";
-
-  async function buscar() {
-    if (!selectedNombre) {
+  async function buscarConNombre(nombre: string) {
+    if (!nombre.trim()) {
       showToast("Selecciona o escribe un plato");
       return;
     }
@@ -43,17 +39,20 @@ export default function MaridajePage() {
         <span className="font-mono text-[0.65rem]">El Maestro esta eligiendo...</span>
       </div>
     );
+    requestAnimationFrame(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
     try {
-      const data = await maridajeParaPlato(selectedNombre);
+      const data = await maridajeParaPlato(nombre.trim());
       void presupuesto;
 
       if (data.respuesta_libre) {
         setResultHtml(
-          <div className="rounded-temple border border-white/10 bg-black/40 p-4 backdrop-blur-md">
-            <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+          <div className="rounded-temple border border-[var(--border)] bg-[var(--surface)] p-4">
+            <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--burgundy)]">
               El Sommelier dice
             </div>
-            <p className="text-sm leading-relaxed text-[#e8dfd0]">{String(data.respuesta_libre)}</p>
+            <p className="text-base leading-relaxed text-[var(--text)]">{String(data.respuesta_libre)}</p>
           </div>
         );
         return;
@@ -62,8 +61,8 @@ export default function MaridajePage() {
       const vinos = (data.maridajes || data.vinos || data.recomendaciones || []) as MaridajeItem[];
       if (!vinos.length) {
         setResultHtml(
-          <div className="rounded-temple border border-white/10 bg-black/40 p-4 text-sm text-[#c8bfa8] backdrop-blur-md">
-            No se encontraron maridajes para {selectedNombre}
+          <div className="rounded-temple border border-[var(--border)] bg-[var(--surface)] p-4 text-base text-[var(--text-dim)]">
+            No se encontraron maridajes para {nombre}
           </div>
         );
         return;
@@ -71,42 +70,39 @@ export default function MaridajePage() {
 
       setResultHtml(
         <div className="space-y-3">
-          <div className="font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
-            Maridajes para {selectedNombre}
+          <div className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[var(--burgundy)]">
+            Maridajes para {nombre}
           </div>
           {vinos.map((v, i) => {
-            const nombre = v.vino || v.nombre || "";
+            const vinoNombre = v.vino || v.nombre || "";
             const region = v.region || "";
             const varietal = v.varietal || v.tipo || "";
             const razon = v.razon || v.explicacion || v.descripcion || "";
             const poetica = v.nota_poetica || "";
             return (
               <div
-                key={`${nombre}-${i}`}
-                className="rounded-temple border border-white/10 bg-black/40 p-4 backdrop-blur-md transition-transform duration-300 hover:scale-[1.02]"
-                style={{ boxShadow: "0 12px 36px rgba(0,0,0,0.35)" }}
+                key={`${vinoNombre}-${i}`}
+                className="rounded-temple border border-[var(--border)] bg-[var(--surface)] p-4 transition-transform duration-300 hover:scale-[1.01]"
               >
-                <div className="font-display text-2xl text-[#f5efe0] drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
-                  {nombre}
-                </div>
-                <div className="mt-1 font-mono text-[0.55rem] uppercase tracking-wider text-[var(--gold)]">
+                <div className="font-display text-2xl text-[var(--text)]">{vinoNombre}</div>
+                <div className="mt-1 font-mono text-[0.55rem] uppercase tracking-wider text-[var(--burgundy)]">
                   {varietal} - {region}
                 </div>
                 {razon ? (
-                  <p className="mt-3 text-sm leading-relaxed text-[#c8bfa8]">{razon}</p>
+                  <p className="mt-3 text-base leading-relaxed text-[var(--text-dim)]">{razon}</p>
                 ) : null}
                 {poetica ? (
-                  <p className="mt-2 font-display text-sm italic text-[var(--gold-light)]">{poetica}</p>
+                  <p className="mt-2 font-display text-base italic text-[var(--burgundy)]">{poetica}</p>
                 ) : null}
               </div>
             );
           })}
           {data.consejo_maestro || data.consejo ? (
-            <div className="rounded-temple border border-[var(--gold)]/40 bg-gradient-to-br from-[#2a0808]/80 to-black/50 p-4 backdrop-blur-md">
-              <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+            <div className="rounded-temple border border-[var(--burgundy)]/35 bg-[var(--surface-2)] p-4">
+              <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--burgundy)]">
                 Consejo del Sommelier
               </div>
-              <p className="text-sm leading-relaxed text-[#e8dfd0]">
+              <p className="text-base leading-relaxed text-[var(--text)]">
                 {String(data.consejo_maestro || data.consejo)}
               </p>
             </div>
@@ -115,7 +111,7 @@ export default function MaridajePage() {
       );
     } catch {
       setResultHtml(
-        <div className="text-sm text-[#c8bfa8]">
+        <div className="text-base text-[var(--text-dim)]">
           No se pudo conectar con el motor de maridaje. Verifica la conexion.
         </div>
       );
@@ -124,43 +120,43 @@ export default function MaridajePage() {
     }
   }
 
+  function onPlatoClick(id: string, nombre: string) {
+    setPlatoId(id);
+    setPlatoLibre("");
+    void buscarConNombre(nombre);
+  }
+
   return (
     <div className="relative">
-      <div className="pointer-events-none absolute -left-16 top-0 h-72 w-72 rounded-full bg-[#2a0808]/55 blur-3xl" />
-      <div className="pointer-events-none absolute -right-12 top-40 h-56 w-56 rounded-full bg-[#800020]/20 blur-3xl" />
-
       <div className="relative pb-2 pt-1 text-center">
-        <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-[var(--gold)]">
+        <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-[var(--burgundy)]">
           Motor de maridaje
         </div>
-        <h1 className="font-display text-4xl font-light leading-tight text-[#f5efe0] drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]">
-          Cocina <em className="text-[var(--gold)]">dominicana</em>
+        <h1 className="font-display text-4xl font-light leading-tight text-[var(--text)]">
+          Cocina <em className="text-[var(--burgundy)]">dominicana</em>
           <br />+ vino mundial
         </h1>
       </div>
 
-      <div className="relative mb-3 mt-6 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
-        Platos tradicionales
+      <div className="relative mb-3 mt-6 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[var(--burgundy)]">
+        Platos tradicionales — toca para maridar
       </div>
-      <div className="relative mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="relative mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {PLATOS_TRADICIONALES.map((p) => (
           <HeroMediaCard
             key={p.id}
             image={p.image}
             title={p.nombre}
-            subtitle={p.desc}
+            subtitle={loading && platoId === p.id ? "Buscando vino..." : p.desc}
             badge="Gastronomia RD"
             active={platoId === p.id && !platoLibre.trim()}
             tall
-            onClick={() => {
-              setPlatoId(p.id);
-              setPlatoLibre("");
-            }}
+            onClick={() => onPlatoClick(p.id, p.nombre)}
           />
         ))}
       </div>
 
-      <label className="relative mb-2 block font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+      <label className="relative mb-2 block font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[var(--burgundy)]">
         O escribe tu plato
       </label>
       <input
@@ -170,7 +166,7 @@ export default function MaridajePage() {
         placeholder="Ej: Pernil de cerdo asado..."
       />
 
-      <label className="relative mb-2 block font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+      <label className="relative mb-2 block font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[var(--burgundy)]">
         Presupuesto
       </label>
       <select
@@ -185,11 +181,24 @@ export default function MaridajePage() {
         ))}
       </select>
 
-      <button type="button" className="btn-primary relative mb-6" onClick={buscar} disabled={loading}>
+      <button
+        type="button"
+        className="btn-primary relative mb-6"
+        onClick={() => {
+          const nombre =
+            platoLibre.trim() ||
+            PLATOS_TRADICIONALES.find((p) => p.id === platoId)?.nombre ||
+            "";
+          void buscarConNombre(nombre);
+        }}
+        disabled={loading}
+      >
         {loading ? "Consultando al Maestro..." : "Descubrir Maridaje"}
       </button>
 
-      <div className="relative">{resultHtml}</div>
+      <div className="relative" ref={resultRef}>
+        {resultHtml}
+      </div>
     </div>
   );
 }

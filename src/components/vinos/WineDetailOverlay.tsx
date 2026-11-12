@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import type { Vino } from "@/lib/api";
 import { COLORES_VINO, calcularPuntuacionRD } from "@/lib/api";
 import { readBodega, toggleBodega } from "@/lib/bodega";
+import { resolveWineImage } from "@/lib/wineImages";
+import { wineFallback } from "@/lib/media";
 import { useToast } from "@/components/providers/ToastProvider";
 import { useState } from "react";
 
@@ -98,15 +100,15 @@ export function WineDetailOverlay({
           className="relative flex h-48 items-center justify-center"
           style={{ background: `linear-gradient(135deg, #1a0a00, ${color}44)` }}
         >
-          {vino.imagen ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={vino.imagen} alt={vino.nombre} className="h-40 object-contain drop-shadow-2xl" />
-          ) : (
-            <div
-              className="h-36 w-10 rounded-t-full rounded-b-sm"
-              style={{ background: `linear-gradient(180deg, ${color}, #1a0808)` }}
-            />
-          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={resolveWineImage(vino.nombre, vino.imagen) || wineFallback(vino.nombre)}
+            alt={vino.nombre}
+            className="h-40 max-w-[70%] object-contain drop-shadow-2xl"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = wineFallback(vino.nombre);
+            }}
+          />
           {vino.tipo ? (
             <span
               className="absolute bottom-3 right-3 rounded-full px-3 py-1 font-mono text-[0.55rem] uppercase tracking-wider"
@@ -119,10 +121,10 @@ export function WineDetailOverlay({
 
         <div className="space-y-4 p-5">
           <div>
-            <h2 className="font-display text-2xl" style={{ color: "var(--cream)" }}>
+            <h2 className="font-display text-2xl" style={{ color: "var(--text)" }}>
               {vino.nombre}
             </h2>
-            <p className="mt-1 font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: "var(--gold)" }}>
+            <p className="mt-1 font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: "var(--burgundy)" }}>
               {vino.bodega || ""}
             </p>
           </div>

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
-  IconCamera,
   IconCellar,
   IconGraduation,
   IconHome,
@@ -25,9 +24,8 @@ const PRIMARY = [
 
 const MORE = [
   { href: "/mapa", label: "Mapa", icon: IconMap, desc: "Cartografia vinicola" },
-  { href: "/bodega", label: "Bodega", icon: IconCellar, desc: "Tu coleccion" },
+  { href: "/bodega", label: "Bodega", icon: IconCellar, desc: "Coleccion + escaneo" },
   { href: "/sommelier", label: "Sommelier", icon: IconGraduation, desc: "Consulta con AI" },
-  { href: "/catalab", label: "Escanea", icon: IconCamera, desc: "Escanea etiquetas" },
   { href: "/academia", label: "Academia", icon: IconGraduation, desc: "15 lecciones" },
   { href: "/perfil", label: "Perfil", icon: IconUser, desc: "Tu progreso" },
 ] as const;

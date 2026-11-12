@@ -1,10 +1,14 @@
 /** Stock media — Pexels / Unsplash CDN (free to use) */
 
+/** Viñedo / enología — no genéricos ajenos al vino */
 export const HERO_VIDEO =
-  "https://videos.pexels.com/video-files/3209829/3209829-uhd_2560_1440_25fps.mp4";
+  "https://videos.pexels.com/video-files/4763824/4763824-hd_1280_720_24fps.mp4";
+
+export const HERO_VIDEO_FALLBACK =
+  "https://videos.pexels.com/video-files/3571264/3571264-hd_1280_720_30fps.mp4";
 
 export const HERO_VIDEO_POSTER =
-  "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1400&q=80";
+  "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1400&q=80";
 
 export const PLATO_IMAGES: Record<string, string> = {
   mofongo:
@@ -34,12 +38,14 @@ export const PLATO_IMAGES: Record<string, string> = {
 };
 
 export const WINE_FALLBACKS = [
+  "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1474722883778-792e7990302f?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1586370434639-0fe43b2d32d6?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1568213816046-0ee1c42bd559?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1528823872057-9c018a7a7553?auto=format&fit=crop&w=900&q=80",
 ];
 
 export const ACADEMIA_IMAGES = [

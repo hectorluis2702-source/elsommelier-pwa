@@ -89,7 +89,7 @@ export default function PerfilPage() {
           { value: "0", label: "XP" },
           { value: "0", label: "Racha dias" },
         ].map((s) => (
-          <div key={s.label} className="rounded-temple border border-[var(--border)] bg-[#1c1414] py-4 text-center">
+          <div key={s.label} className="rounded-temple border border-[var(--border)] bg-[var(--surface)] py-4 text-center">
             <div className="font-display text-2xl text-[var(--gold)]">{s.value}</div>
             <div className="mt-1 font-mono text-[0.6rem] uppercase tracking-wider text-[var(--text-dim)]">
               {s.label}
@@ -98,7 +98,7 @@ export default function PerfilPage() {
         ))}
       </div>
 
-      <div className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+      <div className="mb-3 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-[var(--burgundy)]">
         Planes de suscripcion
       </div>
 
@@ -112,9 +112,10 @@ export default function PerfilPage() {
               onClick={() => selectPlan(p.id)}
               className="w-full rounded-temple border p-4 text-left transition-transform duration-300 hover:scale-[1.01]"
               style={{
-                borderColor: active ? "var(--gold)" : p.accent,
-                background: active ? "rgba(42,8,8,0.55)" : "#1c1414",
-                boxShadow: active ? "0 0 0 1px var(--gold)" : undefined,
+                borderColor: active ? "var(--burgundy)" : "var(--border)",
+                background: active ? "var(--surface-2)" : "var(--surface)",
+                boxShadow: active ? "0 0 0 1px var(--burgundy)" : undefined,
+                color: "var(--text)",
               }}
               aria-pressed={active}
             >
@@ -122,15 +123,15 @@ export default function PerfilPage() {
                 <div>
                   <div
                     className="mb-1 font-mono text-[0.65rem] uppercase tracking-wider"
-                    style={{ color: "var(--gold)" }}
+                    style={{ color: "var(--burgundy)" }}
                   >
                     {p.id === "bronce" ? "Plan actual base" : p.label}
                   </div>
-                  <h2 className="font-display text-2xl text-[var(--cream)]">
+                  <h2 className="font-display text-2xl text-[var(--text)]">
                     {p.id === "bronce" ? p.label : p.price}
                   </h2>
                   {p.id !== "bronce" ? (
-                    <p className="mt-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-[var(--gold-light)]">
+                    <p className="mt-0.5 font-mono text-[0.65rem] uppercase tracking-wider text-[var(--text-dim)]">
                       {p.label}
                     </p>
                   ) : (
@@ -138,14 +139,14 @@ export default function PerfilPage() {
                       {p.price}
                     </p>
                   )}
-                  <p className="mt-2 text-base leading-relaxed text-[#d4c8b0]">{p.body}</p>
+                  <p className="mt-2 text-base leading-relaxed text-[var(--text-dim)]">{p.body}</p>
                 </div>
                 <span
                   className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs"
                   style={{
-                    borderColor: "var(--gold)",
-                    background: active ? "var(--gold)" : "transparent",
-                    color: active ? "#0a0a0a" : "var(--gold)",
+                    borderColor: "var(--burgundy)",
+                    background: active ? "var(--burgundy)" : "transparent",
+                    color: active ? "#f5efe0" : "var(--burgundy)",
                   }}
                 >
                   {active ? "✓" : ""}
@@ -154,9 +155,9 @@ export default function PerfilPage() {
               <div
                 className="mt-4 inline-flex rounded-temple-sm px-3 py-2 font-mono text-[0.65rem] uppercase tracking-wider"
                 style={{
-                  border: "1px solid var(--gold)",
-                  color: active ? "#0a0a0a" : "var(--gold)",
-                  background: active ? "var(--gold)" : "transparent",
+                  border: "1px solid var(--burgundy)",
+                  color: active ? "#f5efe0" : "var(--burgundy)",
+                  background: active ? "var(--burgundy)" : "transparent",
                 }}
               >
                 {active ? "Plan seleccionado" : p.cta}

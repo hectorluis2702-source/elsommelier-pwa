@@ -167,7 +167,7 @@ export function WineMap() {
   const zona = selected && zonaIdx !== null ? selected.zonas?.[zonaIdx] : null;
 
   return (
-    <div className="-mx-4">
+    <div className="-mx-4 sm:-mx-6 md:-mx-10 lg:-mx-14">
       <div className="mb-3 flex flex-wrap items-center gap-2 px-4">
         {(
           [

@@ -2,6 +2,7 @@
 
 import type { Vino } from "@/lib/api";
 import { wineFallback } from "@/lib/media";
+import { resolveWineImage } from "@/lib/wineImages";
 
 export function WineBottleCard({
   vino,
@@ -11,7 +12,8 @@ export function WineBottleCard({
   onClick?: () => void;
 }) {
   const rating = vino.rating?.promedio ? `${vino.rating.promedio}` : null;
-  const image = vino.imagen || wineFallback(vino.nombre || "vino");
+  const curated = resolveWineImage(vino.nombre, vino.imagen);
+  const image = curated || wineFallback(vino.nombre || "vino");
 
   return (
     <button
@@ -33,20 +35,6 @@ export function WineBottleCard({
           (e.currentTarget as HTMLImageElement).src = wineFallback(vino.nombre || "fallback");
         }}
       />
-      {/* Bottle prominence when API image exists — framed vignette */}
-      {vino.imagen ? (
-        <div className="absolute inset-y-6 right-4 z-[1] flex w-[38%] items-center justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={vino.imagen}
-            alt=""
-            className="max-h-full object-contain drop-shadow-[0_12px_30px_rgba(0,0,0,0.75)] transition-transform duration-500 group-hover:scale-105"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = "none";
-            }}
-          />
-        </div>
-      ) : null}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/15" />
       <div

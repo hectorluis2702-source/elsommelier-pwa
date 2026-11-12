@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { SectionHero } from "@/components/ui/SectionHero";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { WineBottleCard } from "@/components/vinos/WineBottleCard";
 import { WineDetailOverlay } from "@/components/vinos/WineDetailOverlay";
@@ -74,10 +73,20 @@ export default function VinosPage() {
   };
 
   return (
-    <div>
-      <SectionHero greeting="Catalogo" title={<>Explora <em>vinos</em></>} />
+    <div className="relative">
+      <div className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full bg-[#2a0808]/50 blur-3xl" />
+      <div className="pointer-events-none absolute -right-10 top-0 h-64 w-64 rounded-full bg-[#800020]/18 blur-3xl" />
 
-      <div className="mb-4 flex gap-2">
+      <div className="relative pb-2 pt-1 text-center">
+        <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-[var(--gold)]">
+          Catalogo
+        </div>
+        <h1 className="font-display text-4xl font-light text-[#f5efe0] drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]">
+          Explora <em className="text-[var(--gold)]">vinos</em>
+        </h1>
+      </div>
+
+      <div className="relative mb-4 mt-5 flex gap-2">
         <input
           className="input-temple flex-1"
           value={query}
@@ -96,7 +105,7 @@ export default function VinosPage() {
         </button>
       </div>
 
-      <div className="mb-5 flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+      <div className="relative mb-6 flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
         {FILTERS.map((f) => (
           <button
             key={f.id}
@@ -104,14 +113,13 @@ export default function VinosPage() {
             onClick={() => onFilter(f.id, "api" in f ? f.api : undefined)}
             className="flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[0.55rem] uppercase tracking-wider transition-colors"
             style={{
-              border: `1px solid ${filter === f.id ? "var(--gold)" : "var(--border)"}`,
+              border: `1px solid ${filter === f.id ? "var(--gold)" : "rgba(255,255,255,0.12)"}`,
               color: filter === f.id ? "var(--gold)" : "var(--text-dim)",
-              background: filter === f.id ? "var(--radial-glow)" : "transparent",
+              background: filter === f.id ? "rgba(42,8,8,0.65)" : "rgba(0,0,0,0.35)",
+              backdropFilter: "blur(10px)",
             }}
           >
-            {f.color ? (
-              <span className="h-2 w-2 rounded-full" style={{ background: f.color }} />
-            ) : null}
+            {f.color ? <span className="h-2 w-2 rounded-full" style={{ background: f.color }} /> : null}
             {f.label}
           </button>
         ))}
@@ -120,13 +128,15 @@ export default function VinosPage() {
       {loading ? (
         <LoadingState label="Cargando bodega..." />
       ) : vinos.length === 0 ? (
-        <p className="py-8 text-center text-sm" style={{ color: "var(--text-dim)" }}>
-          No se encontraron vinos.
-        </p>
+        <p className="relative py-8 text-center text-sm text-[#c8bfa8]">No se encontraron vinos.</p>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="relative grid grid-cols-1 gap-4">
           {vinos.map((v) => (
-            <WineBottleCard key={v.nombre + (v.bodega || "")} vino={v} onClick={() => setSelected(v)} />
+            <WineBottleCard
+              key={v.nombre + (v.bodega || "")}
+              vino={v}
+              onClick={() => setSelected(v)}
+            />
           ))}
         </div>
       )}

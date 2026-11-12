@@ -89,7 +89,7 @@ export function BottomTabBar() {
       </div>
 
       <nav
-        className="glass-tabbar fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg"
+        className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg border-t border-white/10 bg-black/55 backdrop-blur-xl"
         style={{ paddingBottom: "var(--safe-bottom)" }}
       >
         <div className="flex items-stretch justify-around px-1 pt-1.5 pb-1.5">

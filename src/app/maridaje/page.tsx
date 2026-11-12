@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { SectionHero } from "@/components/ui/SectionHero";
+import { HeroMediaCard } from "@/components/ui/HeroMediaCard";
 import { PLATOS_TRADICIONALES, PRESUPUESTOS } from "@/lib/platos";
 import { maridajeParaPlato } from "@/lib/api";
 import { useToast } from "@/components/providers/ToastProvider";
@@ -49,9 +49,11 @@ export default function MaridajePage() {
 
       if (data.respuesta_libre) {
         setResultHtml(
-          <div className="glass-card p-4">
-            <div className="section-label mb-2">El Sommelier dice</div>
-            <p className="text-sm leading-relaxed">{String(data.respuesta_libre)}</p>
+          <div className="rounded-temple border border-white/10 bg-black/40 p-4 backdrop-blur-md">
+            <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+              El Sommelier dice
+            </div>
+            <p className="text-sm leading-relaxed text-[#e8dfd0]">{String(data.respuesta_libre)}</p>
           </div>
         );
         return;
@@ -60,7 +62,7 @@ export default function MaridajePage() {
       const vinos = (data.maridajes || data.vinos || data.recomendaciones || []) as MaridajeItem[];
       if (!vinos.length) {
         setResultHtml(
-          <div className="glass-card p-4 text-sm" style={{ color: "var(--text-dim)" }}>
+          <div className="rounded-temple border border-white/10 bg-black/40 p-4 text-sm text-[#c8bfa8] backdrop-blur-md">
             No se encontraron maridajes para {selectedNombre}
           </div>
         );
@@ -69,7 +71,9 @@ export default function MaridajePage() {
 
       setResultHtml(
         <div className="space-y-3">
-          <div className="section-label">Maridajes para {selectedNombre}</div>
+          <div className="font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+            Maridajes para {selectedNombre}
+          </div>
           {vinos.map((v, i) => {
             const nombre = v.vino || v.nombre || "";
             const region = v.region || "";
@@ -77,36 +81,32 @@ export default function MaridajePage() {
             const razon = v.razon || v.explicacion || v.descripcion || "";
             const poetica = v.nota_poetica || "";
             return (
-              <div key={`${nombre}-${i}`} className="glass-card p-4">
-                <div className="font-display text-xl" style={{ color: "var(--cream)" }}>
+              <div
+                key={`${nombre}-${i}`}
+                className="rounded-temple border border-white/10 bg-black/40 p-4 backdrop-blur-md transition-transform duration-300 hover:scale-[1.02]"
+                style={{ boxShadow: "0 12px 36px rgba(0,0,0,0.35)" }}
+              >
+                <div className="font-display text-2xl text-[#f5efe0] drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
                   {nombre}
                 </div>
-                <div
-                  className="mt-1 font-mono text-[0.55rem] uppercase tracking-wider"
-                  style={{ color: "var(--gold)" }}
-                >
+                <div className="mt-1 font-mono text-[0.55rem] uppercase tracking-wider text-[var(--gold)]">
                   {varietal} - {region}
                 </div>
                 {razon ? (
-                  <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-                    {razon}
-                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-[#c8bfa8]">{razon}</p>
                 ) : null}
                 {poetica ? (
-                  <p
-                    className="mt-2 font-display italic text-sm"
-                    style={{ color: "var(--gold-light)" }}
-                  >
-                    {poetica}
-                  </p>
+                  <p className="mt-2 font-display text-sm italic text-[var(--gold-light)]">{poetica}</p>
                 ) : null}
               </div>
             );
           })}
           {data.consejo_maestro || data.consejo ? (
-            <div className="glass-card p-4" style={{ borderColor: "var(--gold)" }}>
-              <div className="section-label mb-2">Consejo del Sommelier</div>
-              <p className="text-sm leading-relaxed">
+            <div className="rounded-temple border border-[var(--gold)]/40 bg-gradient-to-br from-[#2a0808]/80 to-black/50 p-4 backdrop-blur-md">
+              <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+                Consejo del Sommelier
+              </div>
+              <p className="text-sm leading-relaxed text-[#e8dfd0]">
                 {String(data.consejo_maestro || data.consejo)}
               </p>
             </div>
@@ -115,7 +115,7 @@ export default function MaridajePage() {
       );
     } catch {
       setResultHtml(
-        <div className="text-sm" style={{ color: "var(--text-dim)" }}>
+        <div className="text-sm text-[#c8bfa8]">
           No se pudo conectar con el motor de maridaje. Verifica la conexion.
         </div>
       );
@@ -125,67 +125,56 @@ export default function MaridajePage() {
   }
 
   return (
-    <div>
-      <SectionHero
-        greeting="Motor de maridaje"
-        title={
-          <>
-            Cocina <em>dominicana</em>
-            <br />
-            + vino mundial
-          </>
-        }
-      />
+    <div className="relative">
+      <div className="pointer-events-none absolute -left-16 top-0 h-72 w-72 rounded-full bg-[#2a0808]/55 blur-3xl" />
+      <div className="pointer-events-none absolute -right-12 top-40 h-56 w-56 rounded-full bg-[#800020]/20 blur-3xl" />
 
-      <div className="mb-2 section-label">Platos tradicionales</div>
-      <div className="mb-6 grid grid-cols-2 gap-3">
-        {PLATOS_TRADICIONALES.map((p) => {
-          const active = platoId === p.id && !platoLibre.trim();
-          return (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => {
-                setPlatoId(p.id);
-                setPlatoLibre("");
-              }}
-              className="group overflow-hidden rounded-temple text-left transition-transform duration-200 hover:-translate-y-0.5"
-              style={{
-                border: `1px solid ${active ? "var(--gold)" : "var(--glass-border)"}`,
-                boxShadow: active ? "0 0 0 1px var(--gold)" : "var(--glass-shadow)",
-              }}
-            >
-              <div className={`relative flex h-24 items-end bg-gradient-to-br ${p.tone} p-3`}>
-                <div
-                  className="absolute inset-0 opacity-40"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle at 70% 30%, rgba(255,255,255,0.15), transparent 50%)",
-                  }}
-                />
-                <div className="relative">
-                  <div className="font-display text-lg text-[#f5efe0]">{p.nombre}</div>
-                  <div className="font-mono text-[0.5rem] uppercase tracking-wider text-[#c8bfa8]">
-                    {p.desc}
-                  </div>
-                </div>
-              </div>
-            </button>
-          );
-        })}
+      <div className="relative pb-2 pt-1 text-center">
+        <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-[var(--gold)]">
+          Motor de maridaje
+        </div>
+        <h1 className="font-display text-4xl font-light leading-tight text-[#f5efe0] drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]">
+          Cocina <em className="text-[var(--gold)]">dominicana</em>
+          <br />+ vino mundial
+        </h1>
       </div>
 
-      <label className="mb-2 block section-label">O escribe tu plato</label>
+      <div className="relative mb-3 mt-6 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+        Platos tradicionales
+      </div>
+      <div className="relative mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {PLATOS_TRADICIONALES.map((p) => (
+          <HeroMediaCard
+            key={p.id}
+            image={p.image}
+            title={p.nombre}
+            subtitle={p.desc}
+            badge="Gastronomia RD"
+            active={platoId === p.id && !platoLibre.trim()}
+            tall
+            onClick={() => {
+              setPlatoId(p.id);
+              setPlatoLibre("");
+            }}
+          />
+        ))}
+      </div>
+
+      <label className="relative mb-2 block font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+        O escribe tu plato
+      </label>
       <input
-        className="input-temple mb-4"
+        className="input-temple relative mb-4"
         value={platoLibre}
         onChange={(e) => setPlatoLibre(e.target.value)}
         placeholder="Ej: Pernil de cerdo asado..."
       />
 
-      <label className="mb-2 block section-label">Presupuesto</label>
+      <label className="relative mb-2 block font-mono text-[0.55rem] uppercase tracking-[0.16em] text-[var(--gold)]">
+        Presupuesto
+      </label>
       <select
-        className="input-temple mb-5"
+        className="input-temple relative mb-5"
         value={presupuesto}
         onChange={(e) => setPresupuesto(e.target.value)}
       >
@@ -196,11 +185,11 @@ export default function MaridajePage() {
         ))}
       </select>
 
-      <button type="button" className="btn-primary mb-6" onClick={buscar} disabled={loading}>
+      <button type="button" className="btn-primary relative mb-6" onClick={buscar} disabled={loading}>
         {loading ? "Consultando al Maestro..." : "Descubrir Maridaje"}
       </button>
 
-      {resultHtml}
+      <div className="relative">{resultHtml}</div>
     </div>
   );
 }

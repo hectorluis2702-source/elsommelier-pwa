@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SectionHero } from "@/components/ui/SectionHero";
 import { LoadingState } from "@/components/ui/LoadingState";
+import { HeroMediaCard } from "@/components/ui/HeroMediaCard";
 import { type Leccion, listarLecciones, detalleLeccion } from "@/lib/api";
 import { mdToHtml } from "@/lib/markdown";
+import { academiaImage } from "@/lib/media";
 import { useToast } from "@/components/providers/ToastProvider";
 
 const NIVEL_LABEL: Record<string, string> = {
@@ -79,46 +80,58 @@ export default function AcademiaPage() {
   let nivelActual: string | null = null;
 
   return (
-    <div>
-      <SectionHero
-        greeting="Academia El Sommelier RD"
-        title={
-          <>
-            Tu camino al <em>vino</em>
-          </>
-        }
-      />
+    <div className="relative">
+      <div className="pointer-events-none absolute -left-16 top-0 h-72 w-72 rounded-full bg-[#2a0808]/55 blur-3xl" />
+      <div className="pointer-events-none absolute -right-10 top-32 h-56 w-56 rounded-full bg-[#800020]/20 blur-3xl" />
 
-      <div
-        className="mb-4 inline-flex rounded-full px-3 py-1 font-mono text-[0.55rem] uppercase tracking-wider"
-        style={{ border: "1px solid var(--border)", color: "var(--gold)" }}
-      >
+      <div className="relative pb-2 pt-1 text-center">
+        <div className="mb-2 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-[var(--gold)]">
+          Academia El Sommelier RD
+        </div>
+        <h1 className="font-display text-4xl font-light text-[#f5efe0] drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]">
+          Tu camino al <em className="text-[var(--gold)]">vino</em>
+        </h1>
+      </div>
+
+      <div className="relative mb-4 mt-4 inline-flex rounded-full border border-[var(--gold)]/40 bg-black/40 px-3 py-1 font-mono text-[0.55rem] uppercase tracking-wider text-[var(--gold)] backdrop-blur-md">
         Nivel Bronce - Activo
       </div>
 
-      <div className="glass-card mb-6 p-4">
-        <div className="mb-2 flex justify-between font-mono text-[0.55rem] uppercase tracking-wider" style={{ color: "var(--text-dim)" }}>
-          <span>Progreso</span>
-          <span>
-            {xp} / 1000 XP
-          </span>
-        </div>
-        <div className="h-1.5 overflow-hidden rounded-full" style={{ background: "var(--border)" }}>
-          <div
-            className="h-full rounded-full transition-all duration-700"
-            style={{ width: `${(xp / 1000) * 100}%`, background: "linear-gradient(90deg, var(--burgundy), var(--gold))" }}
-          />
+      <div className="relative mb-6 overflow-hidden rounded-temple border border-white/10">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="relative p-4 backdrop-blur-[2px]">
+          <div className="mb-2 flex justify-between font-mono text-[0.55rem] uppercase tracking-wider text-[#c8bfa8]">
+            <span>Progreso</span>
+            <span>
+              {xp} / 1000 XP
+            </span>
+          </div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-white/15">
+            <div
+              className="h-full rounded-full transition-all duration-700"
+              style={{
+                width: `${(xp / 1000) * 100}%`,
+                background: "linear-gradient(90deg, var(--burgundy), var(--gold))",
+              }}
+            />
+          </div>
         </div>
       </div>
 
       {loading ? (
         <LoadingState label="Cargando lecciones..." />
       ) : error ? (
-        <p className="py-8 text-center text-sm" style={{ color: "var(--text-dim)" }}>
+        <p className="relative py-8 text-center text-sm text-[#c8bfa8]">
           Error cargando lecciones. Verifica tu conexion.
         </p>
       ) : (
-        <div className="space-y-2">
+        <div className="relative space-y-4">
           {lecciones.map((l, i) => {
             const showHeader = l.nivel !== nivelActual;
             if (showHeader) nivelActual = l.nivel || null;
@@ -129,31 +142,21 @@ export default function AcademiaPage() {
               <div key={l.slug}>
                 {showHeader ? (
                   <div
-                    className="mb-2 mt-5 font-mono text-[0.55rem] uppercase tracking-[0.14em]"
+                    className="mb-3 mt-2 font-mono text-[0.55rem] uppercase tracking-[0.14em]"
                     style={{ color: isDiplo ? "var(--gold-light)" : "var(--gold)" }}
                   >
                     {NIVEL_LABEL[l.nivel || ""] || (l.nivel || "").toUpperCase()}
                   </div>
                 ) : null}
-                <button
-                  type="button"
+                <HeroMediaCard
+                  image={l.imagen_url || academiaImage(i)}
+                  title={l.titulo}
+                  subtitle={dur ? `${num} · ${dur}` : num}
+                  badge={l.nivel || "Leccion"}
+                  active={isDiplo}
+                  tall
                   onClick={() => abrir(l)}
-                  className="glass-card flex w-full items-center gap-3 p-3 text-left transition-transform hover:-translate-y-0.5"
-                  style={isDiplo ? { borderColor: "var(--gold)" } : undefined}
-                >
-                  <span className="font-display text-2xl" style={{ color: "var(--gold)" }}>
-                    {num}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-display text-lg leading-tight" style={{ color: "var(--cream)" }}>
-                      {l.titulo}
-                    </span>
-                    <span className="font-mono text-[0.5rem] uppercase tracking-wider" style={{ color: "var(--text-dim)" }}>
-                      {dur}
-                    </span>
-                  </span>
-                  <span style={{ color: "var(--text-dim)" }}>›</span>
-                </button>
+                />
               </div>
             );
           })}

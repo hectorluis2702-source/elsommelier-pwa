@@ -10,10 +10,10 @@ export function AppHeader() {
     <header
       className="sticky top-0 z-40 flex items-center justify-between px-5 py-3.5"
       style={{
-        background: "var(--header-bg)",
-        backdropFilter: "blur(20px) saturate(1.5)",
-        WebkitBackdropFilter: "blur(20px) saturate(1.5)",
-        borderBottom: "1px solid var(--border)",
+        background: "rgba(10,10,10,0.45)",
+        backdropFilter: "blur(22px) saturate(1.4)",
+        WebkitBackdropFilter: "blur(22px) saturate(1.4)",
+        borderBottom: "1px solid rgba(201,168,76,0.18)",
       }}
     >
       <div className="flex items-center gap-2.5">

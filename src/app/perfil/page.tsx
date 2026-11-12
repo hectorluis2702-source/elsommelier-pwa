@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/components/providers/ToastProvider";
 
 type PlanId = "bronce" | "plata" | "oro";
 
 const PLAN_KEY = "elsommelier-plan";
+const ACADEMIA_OPEN_KEY = "elsommelier-academia-open";
 
 const PLANS: {
   id: PlanId;
@@ -21,7 +23,7 @@ const PLANS: {
     price: "Plan actual",
     body: "15 lecciones - Quiz interactivos - Acceso a El Maestro AI",
     accent: "rgba(184,134,11,0.22)",
-    cta: "Seleccionar Bronce",
+    cta: "Ir a Academia Bronce",
   },
   {
     id: "plata",
@@ -29,7 +31,7 @@ const PLANS: {
     price: "$9.99 / mes",
     body: "18 lecciones avanzadas - Cata Lab SAT - Bodega personal - Sin limites con El Maestro",
     accent: "rgba(184,134,11,0.4)",
-    cta: "Elegir Plata",
+    cta: "Activar e ir a Academia",
   },
   {
     id: "oro",
@@ -37,12 +39,13 @@ const PLANS: {
     price: "$29.99 / mes",
     body: "12 lecciones master - Certificacion SAT - Spider Graph avanzado - Maridaje personalizado - Soporte prioritario",
     accent: "rgba(184,134,11,0.6)",
-    cta: "Elegir Oro",
+    cta: "Activar e ir a Academia",
   },
 ];
 
 export default function PerfilPage() {
   const { showToast } = useToast();
+  const router = useRouter();
   const [plan, setPlan] = useState<PlanId>("bronce");
 
   useEffect(() => {
@@ -55,12 +58,11 @@ export default function PerfilPage() {
   function selectPlan(id: PlanId) {
     setPlan(id);
     localStorage.setItem(PLAN_KEY, id);
+    // Abrir de inmediato el índice del módulo del plan elegido
+    sessionStorage.setItem(ACADEMIA_OPEN_KEY, id);
     const labels = { bronce: "Bronce", plata: "Plata", oro: "Oro" } as const;
-    showToast(
-      id === "bronce"
-        ? "Plan Bronce activo"
-        : `Simulacion: plan ${labels[id]} seleccionado. Checkout pronto.`
-    );
+    showToast(`Plan ${labels[id]} activo — abriendo Academia`);
+    router.push("/academia/");
   }
 
   const nivelLabel =

@@ -7,6 +7,7 @@ import { mdToHtml } from "@/lib/markdown";
 import { useToast } from "@/components/providers/ToastProvider";
 
 const PLAN_KEY = "elsommelier-plan";
+const ACADEMIA_OPEN_KEY = "elsommelier-academia-open";
 
 type PlanId = "bronce" | "plata" | "oro";
 type ModuloId = "bronce" | "plata" | "oro" | "diplomado";
@@ -61,6 +62,33 @@ export default function AcademiaPage() {
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
+
+  // Desde Perfil: plan elegido → abrir índice del módulo correspondiente
+  useEffect(() => {
+    if (loading || error || lecciones.length === 0) return;
+
+    const raw = sessionStorage.getItem(ACADEMIA_OPEN_KEY);
+    if (!raw) return;
+    sessionStorage.removeItem(ACADEMIA_OPEN_KEY);
+
+    const target: ModuloId =
+      raw === "plata" || raw === "oro" || raw === "bronce" || raw === "diplomado"
+        ? raw
+        : "bronce";
+
+    const allowed = PLAN_ACCESS[plan];
+    if (!allowed.includes(target) && target !== "bronce") {
+      showToast(`Tu plan ${plan} no incluye este módulo.`);
+      return;
+    }
+
+    setModuloActivo(target);
+    setIndiceAbierto(true);
+    setView("indice");
+    setLeccionActiva(null);
+    setDetalle(null);
+    showToast(`${NIVEL_LABEL[target]} listo`);
+  }, [loading, error, lecciones, plan, showToast]);
 
   const modulosDisponibles = useMemo(() => {
     const allowed = PLAN_ACCESS[plan];
@@ -230,8 +258,8 @@ export default function AcademiaPage() {
           {NIVEL_LABEL[moduloActivo]}
         </h1>
         <p className="mt-2 text-base text-[#d4c8b0]">
-          {leccionesDelModulo.length} lección{leccionesDelModulo.length === 1 ? "" : "es"} en este
-          módulo
+          {leccionesDelModulo.length}{" "}
+          {leccionesDelModulo.length === 1 ? "lección" : "lecciones"} en este módulo
         </p>
 
         <div className="mt-6 overflow-hidden rounded-temple border border-[var(--border)] bg-[#1c1414]">
@@ -351,7 +379,7 @@ export default function AcademiaPage() {
                 <span className="mt-1 block font-mono text-[0.65rem] uppercase tracking-wider text-[#d4c8b0]">
                   {locked
                     ? "Bloqueado — actualiza tu plan"
-                    : `${count} lección${count === 1 ? "" : "es"} · Ver índice`}
+                    : `${count} ${count === 1 ? "lección" : "lecciones"} · Ver índice`}
                 </span>
               </span>
               <span className="font-mono text-sm text-[var(--gold)]">{locked ? "Bloq." : "›"}</span>

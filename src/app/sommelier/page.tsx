@@ -62,7 +62,7 @@ export default function SommelierPage() {
           M
         </div>
         <div>
-          <h1 className="font-display text-lg" style={{ color: "var(--cream)" }}>
+          <h1 className="font-display text-lg" style={{ color: "var(--text)" }}>
             El Sommelier de Cabecera
           </h1>
           <p className="font-mono text-[0.55rem] uppercase tracking-wider" style={{ color: "var(--text-dim)" }}>
@@ -85,7 +85,7 @@ export default function SommelierPage() {
               style={{
                 background: m.role === "user" ? "var(--burgundy)" : "var(--glass-bg)",
                 border: "1px solid var(--border)",
-                color: "var(--cream)",
+                color: "var(--text)",
               }}
             >
               {m.text.split("\n").map((line, li) => (
@@ -142,7 +142,7 @@ export default function SommelierPage() {
           style={{
             background: "linear-gradient(135deg, var(--burgundy), var(--burgundy-light))",
             border: "1px solid var(--gold)",
-            color: "var(--cream)",
+            color: "var(--text)",
           }}
           aria-label="Enviar"
         >

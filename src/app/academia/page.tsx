@@ -156,7 +156,7 @@ export default function AcademiaPage() {
 
   if (error) {
     return (
-      <p className="py-10 text-center text-base text-[#e8dfd0]">
+      <p className="py-10 text-center text-base text-[var(--text)]">
         Error cargando lecciones. Verifica tu conexion.
       </p>
     );
@@ -173,8 +173,8 @@ export default function AcademiaPage() {
     const next = idx >= 0 && idx < leccionesDelModulo.length - 1 ? leccionesDelModulo[idx + 1] : null;
 
     return (
-      <div className="relative -mx-4 -mt-5 min-h-[80vh] bg-[#0f0c0c] pb-8">
-        <div className="sticky top-0 z-20 border-b border-[var(--border)] bg-[#161010]/95 px-4 py-3 backdrop-blur-md">
+      <div className="relative -mx-4 -mt-5 min-h-[80vh] bg-[var(--bg)] pb-8">
+        <div className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--surface-2)]/95 px-4 py-3 backdrop-blur-md">
           <button
             type="button"
             onClick={regresarAlIndice}
@@ -188,7 +188,7 @@ export default function AcademiaPage() {
               ? ` · ${leccionActiva.duracion_estimada} min`
               : ""}
           </div>
-          <h1 className="mt-1 font-display text-2xl leading-snug text-[#f5efe0] sm:text-3xl">
+          <h1 className="mt-1 font-display text-2xl leading-snug text-[var(--text)] sm:text-3xl">
             {leccionActiva.titulo}
           </h1>
         </div>
@@ -219,7 +219,7 @@ export default function AcademiaPage() {
               <button
                 type="button"
                 onClick={() => abrirLeccion(prev)}
-                className="flex-1 rounded-temple border border-[var(--border)] bg-[#1c1414] py-3.5 font-mono text-[0.65rem] uppercase tracking-wider text-[#d4c8b0]"
+                className="flex-1 rounded-temple border border-[var(--border)] bg-[var(--surface)] py-3.5 font-mono text-[0.65rem] uppercase tracking-wider text-[var(--text-dim)]"
               >
                 ← Anterior
               </button>
@@ -228,7 +228,7 @@ export default function AcademiaPage() {
               <button
                 type="button"
                 onClick={() => abrirLeccion(next)}
-                className="flex-1 rounded-temple border border-[var(--border)] bg-[#1c1414] py-3.5 font-mono text-[0.65rem] uppercase tracking-wider text-[#d4c8b0]"
+                className="flex-1 rounded-temple border border-[var(--border)] bg-[var(--surface)] py-3.5 font-mono text-[0.65rem] uppercase tracking-wider text-[var(--text-dim)]"
               >
                 Siguiente →
               </button>
@@ -254,15 +254,15 @@ export default function AcademiaPage() {
         <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-[var(--gold)]">
           Plan {plan} · Índice
         </div>
-        <h1 className="font-display text-3xl text-[#f5efe0] sm:text-4xl">
+        <h1 className="font-display text-3xl text-[var(--text)] sm:text-4xl">
           {NIVEL_LABEL[moduloActivo]}
         </h1>
-        <p className="mt-2 text-base text-[#d4c8b0]">
+        <p className="mt-2 text-base text-[var(--text-dim)]">
           {leccionesDelModulo.length}{" "}
           {leccionesDelModulo.length === 1 ? "lección" : "lecciones"} en este módulo
         </p>
 
-        <div className="mt-6 overflow-hidden rounded-temple border border-[var(--border)] bg-[#1c1414]">
+        <div className="mt-6 overflow-hidden rounded-temple border border-[var(--border)] bg-[var(--surface)]">
           <button
             type="button"
             onClick={() => setIndiceAbierto((v) => !v)}
@@ -278,7 +278,7 @@ export default function AcademiaPage() {
           {indiceAbierto ? (
             <div className="border-t border-[var(--border)]">
               {leccionesDelModulo.length === 0 ? (
-                <p className="px-4 py-6 text-base text-[#d4c8b0]">
+                <p className="px-4 py-6 text-base text-[var(--text-dim)]">
                   Aun no hay lecciones publicadas en este modulo.
                 </p>
               ) : (
@@ -290,7 +290,7 @@ export default function AcademiaPage() {
                       key={l.slug}
                       type="button"
                       onClick={() => abrirLeccion(l)}
-                      className="flex w-full items-start gap-3 border-b border-[var(--border)]/70 px-4 py-4 text-left last:border-b-0 transition-colors hover:bg-[#241818]"
+                      className="flex w-full items-start gap-3 border-b border-[var(--border)]/70 px-4 py-4 text-left last:border-b-0 transition-colors hover:bg-[var(--surface-2)]"
                     >
                       <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--gold)]/50 font-mono text-[0.7rem] text-[var(--gold)]">
                         {num}
@@ -300,7 +300,7 @@ export default function AcademiaPage() {
                           Lección {num}
                           {dur ? ` · ${dur}` : ""}
                         </span>
-                        <span className="mt-1 block font-display text-xl leading-snug text-[#f5efe0]">
+                        <span className="mt-1 block font-display text-xl leading-snug text-[var(--text)]">
                           {l.titulo}
                         </span>
                       </span>
@@ -325,17 +325,17 @@ export default function AcademiaPage() {
         <div className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-[var(--gold)]">
           Academia El Sommelier RD
         </div>
-        <h1 className="font-display text-4xl font-light text-[#f5efe0]">
-          Tu camino al <em className="text-[var(--gold)]">vino</em>
+        <h1 className="font-display text-4xl font-light text-[var(--text)]">
+          Tu camino al <em className="text-[var(--burgundy)]">vino</em>
         </h1>
       </div>
 
-      <div className="relative mb-4 mt-4 inline-flex rounded-full border border-[var(--gold)]/50 bg-[#1a1212] px-3.5 py-1.5 font-mono text-[0.65rem] uppercase tracking-wider text-[var(--gold)]">
+      <div className="relative mb-4 mt-4 inline-flex rounded-full border border-[var(--gold)]/50 bg-[var(--surface-2)] px-3.5 py-1.5 font-mono text-[0.65rem] uppercase tracking-wider text-[var(--gold)]">
         Plan {plan.charAt(0).toUpperCase() + plan.slice(1)} - Activo
       </div>
 
-      <div className="relative mb-6 rounded-temple border border-[var(--border)] bg-[#161010] p-5">
-        <div className="mb-2 flex justify-between font-mono text-[0.7rem] uppercase tracking-wider text-[#d4c8b0]">
+      <div className="relative mb-6 rounded-temple border border-[var(--border)] bg-[var(--surface-2)] p-5">
+        <div className="mb-2 flex justify-between font-mono text-[0.7rem] uppercase tracking-wider text-[var(--text-dim)]">
           <span>Progreso</span>
           <span>
             {xp} / 1000 XP
@@ -367,22 +367,29 @@ export default function AcademiaPage() {
               onClick={() => abrirModulo(m)}
               className="flex w-full items-center justify-between rounded-temple border px-4 py-5 text-left transition-transform duration-300 hover:scale-[1.01]"
               style={{
-                borderColor: locked ? "rgba(154,144,128,0.25)" : "var(--border)",
-                background: "#1c1414",
-                opacity: locked ? 0.55 : 1,
+                borderColor: locked ? "var(--border)" : "var(--burgundy)",
+                background: locked ? "var(--surface-2)" : "var(--surface)",
               }}
             >
               <span>
-                <span className="block font-display text-2xl text-[#f5efe0]">
+                <span
+                  className="block font-display text-2xl"
+                  style={{ color: locked ? "var(--text-dim)" : "var(--text)" }}
+                >
                   {NIVEL_LABEL[m]}
                 </span>
-                <span className="mt-1 block font-mono text-[0.65rem] uppercase tracking-wider text-[#d4c8b0]">
+                <span
+                  className="mt-1 block font-mono text-[0.65rem] uppercase tracking-wider"
+                  style={{ color: locked ? "var(--burgundy)" : "var(--text-dim)" }}
+                >
                   {locked
                     ? "Bloqueado — actualiza tu plan"
                     : `${count} ${count === 1 ? "lección" : "lecciones"} · Ver índice`}
                 </span>
               </span>
-              <span className="font-mono text-sm text-[var(--gold)]">{locked ? "Bloq." : "›"}</span>
+              <span className="font-mono text-sm" style={{ color: "var(--burgundy)" }}>
+                {locked ? "Bloq." : "›"}
+              </span>
             </button>
           );
         })}
@@ -409,7 +416,7 @@ function LeccionReader({
     if (preguntas.length) {
       quizBlock = (
         <section className="mt-10">
-          <h2 className="mb-4 font-display text-2xl text-[#f5efe0]">Quiz de repaso</h2>
+          <h2 className="mb-4 font-display text-2xl text-[var(--text)]">Quiz de repaso</h2>
           <div className="space-y-4">
             {(
               preguntas as {
@@ -422,9 +429,9 @@ function LeccionReader({
             ).map((p, pi) => (
               <div
                 key={pi}
-                className="rounded-temple border border-[var(--border)] bg-[#1c1414] p-5"
+                className="rounded-temple border border-[var(--border)] bg-[var(--surface)] p-5"
               >
-                <div className="mb-3 font-display text-xl text-[#f5efe0]">
+                <div className="mb-3 font-display text-xl text-[var(--text)]">
                   {pi + 1}. {p.pregunta}
                 </div>
                 <div className="space-y-2">
@@ -432,7 +439,7 @@ function LeccionReader({
                     <button
                       key={oi}
                       type="button"
-                      className="w-full rounded-temple-sm border border-[var(--border)] bg-[#221818] px-4 py-3.5 text-left text-[1.05rem] leading-relaxed text-[#e8dfd0]"
+                      className="w-full rounded-temple-sm border border-[var(--border)] bg-[var(--surface)] px-4 py-3.5 text-left text-[1.05rem] leading-relaxed text-[var(--text)]"
                       onClick={(e) => {
                         const parent = e.currentTarget.parentElement;
                         if (parent?.querySelector("[data-answered]")) return;
@@ -466,17 +473,17 @@ function LeccionReader({
     if (Array.isArray(ej) && ej.length) {
       ejemplos = (
         <section className="mt-10">
-          <h2 className="mb-4 font-display text-2xl text-[#f5efe0]">Ejemplos practicos</h2>
+          <h2 className="mb-4 font-display text-2xl text-[var(--text)]">Ejemplos practicos</h2>
           {ej.map((e: { titulo?: string; descripcion?: string; detalle?: string }, i: number) => (
             <div
               key={i}
-              className="mb-3 rounded-temple border border-[var(--border)] bg-[#1c1414] p-5"
+              className="mb-3 rounded-temple border border-[var(--border)] bg-[var(--surface)] p-5"
             >
-              <div className="font-display text-xl text-[#f5efe0]">
+              <div className="font-display text-xl text-[var(--text)]">
                 {e.titulo || e.descripcion || JSON.stringify(e)}
               </div>
               {e.detalle ? (
-                <p className="mt-2 text-[1.08rem] leading-[1.7] text-[#e8dfd0]">{e.detalle}</p>
+                <p className="mt-2 text-[1.08rem] leading-[1.7] text-[var(--text)]">{e.detalle}</p>
               ) : null}
             </div>
           ))}
@@ -500,12 +507,12 @@ function LeccionReader({
       ) : null}
 
       {leccion.objetivos?.length ? (
-        <section className="mb-8 rounded-temple border border-[var(--border)] bg-[#1c1414] p-5 sm:p-6">
-          <h2 className="mb-4 font-display text-2xl text-[#f5efe0]">Objetivos de aprendizaje</h2>
+        <section className="mb-8 rounded-temple border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6">
+          <h2 className="mb-4 font-display text-2xl text-[var(--text)]">Objetivos de aprendizaje</h2>
           {leccion.objetivos.map((o) => (
             <div
               key={o}
-              className="mb-3 border-l-2 border-[var(--gold)]/55 pl-3.5 text-[1.08rem] leading-[1.65] text-[#e8dfd0]"
+              className="mb-3 border-l-2 border-[var(--gold)]/55 pl-3.5 text-[1.08rem] leading-[1.65] text-[var(--text)]"
             >
               {o}
             </div>
@@ -514,15 +521,15 @@ function LeccionReader({
       ) : null}
 
       {leccion.contenido_teorico ? (
-        <section className="mb-8 rounded-temple border border-[var(--border)] bg-[#1c1414] p-5 sm:p-7">
-          <h2 className="mb-5 font-display text-2xl text-[#f5efe0]">Contenido</h2>
+        <section className="mb-8 rounded-temple border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-7">
+          <h2 className="mb-5 font-display text-2xl text-[var(--text)]">Contenido</h2>
           <div
             className="text-[1.15rem] leading-[1.8] text-[#efe6d6] sm:text-[1.2rem]"
             dangerouslySetInnerHTML={{ __html: mdToHtml(leccion.contenido_teorico) }}
           />
         </section>
       ) : (
-        <p className="rounded-temple border border-[var(--border)] bg-[#1c1414] p-5 text-base text-[#d4c8b0]">
+        <p className="rounded-temple border border-[var(--border)] bg-[var(--surface)] p-5 text-base text-[var(--text-dim)]">
           Esta leccion aun no tiene contenido teorico publicado.
         </p>
       )}
